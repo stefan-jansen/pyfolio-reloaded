@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sector Analysis &#8212; pyfolio 0.9.3+28.g3dcf744 documentation</title>
+    <title>Round Trip Analysis &#8212; pyfolio 0.9.3+28.g3dcf744 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet" />
   <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -37,8 +37,8 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API" href="../api-reference.html" />
-    <link rel="prev" title="Round Trip Analysis" href="round_trip_tear_sheet_example.html" />
+    <link rel="next" title="Sector Analysis" href="sector_mappings_example.html" />
+    <link rel="prev" title="Zipline Algorithm" href="zipline_algo_example.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -90,14 +90,14 @@
  </a>
 </li>
 
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="round_trip_tear_sheet_example.html">
+<li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
   Round Trip Analysis
  </a>
 </li>
 
-<li class="toctree-l1 current active nav-item">
- <a class="current reference internal nav-link" href="#">
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="sector_mappings_example.html">
   Sector Analysis
  </a>
 </li>
@@ -177,23 +177,28 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Imports-&amp;-Settings">
-   Imports &amp; Settings
+  <a class="reference internal nav-link" href="#Imports-&amp;-Settins">
+   Imports &amp; Settins
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Load-data">
-   Load data
+  <a class="reference internal nav-link" href="#Load-Data">
+   Load Data
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Add-Sector-Mappings">
-   Add Sector Mappings
+  <a class="reference internal nav-link" href="#Add-Sector-Mapping">
+   Add Sector Mapping
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Run-Position-Tear-Sheet">
-   Run Position Tear Sheet
+  <a class="reference internal nav-link" href="#Run-Round-Trip-Tear-Sheet">
+   Run Round Trip Tear Sheet
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Explore-underlying-functions">
+   Explore underlying functions
   </a>
  </li>
 </ul>
@@ -205,7 +210,7 @@
                 
 
 <div class="tocsection editthispage">
-    <a href="https://github.com/stefan-jansen/pyfolio-reloaded/edit/main/docs/source/notebooks/sector_mappings_example.ipynb">
+    <a href="https://github.com/stefan-jansen/pyfolio-reloaded/edit/main/docs/source/notebooks/round_trip_tear_sheet_example.ipynb">
         <i class="fas fa-pencil-alt"></i> Edit this page
     </a>
 </div>
@@ -472,14 +477,17 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Sector-Analysis">
-<h1>Sector Analysis<a class="headerlink" href="#Sector-Analysis" title="Permalink to this headline">¶</a></h1>
-<p>To generate sector allocation plots in the positions tearsheet and PnL by sector in the round trips tearsheet, you must pass pyfolio a dictionary (or dict-like data structure) of symbol-sector mappings, where symbols are keys and sectors are values. <code class="docutils literal notranslate"><span class="pre">create_full_tearsheet</span></code> will also take symbol-sector mappings as the keyword argument <code class="docutils literal notranslate"><span class="pre">sector_mappings</span></code>.</p>
-<p>In this notebook, we generate the positions tear sheet and round-trip tear sheet with sector mappings.</p>
-<div class="section" id="Imports-&amp;-Settings">
-<h2>Imports &amp; Settings<a class="headerlink" href="#Imports-&-Settings" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Round-Trip-Analysis">
+<h1>Round Trip Analysis<a class="headerlink" href="#Round-Trip-Analysis" title="Permalink to this headline">¶</a></h1>
+<p>When evaluating the performance of an investing strategy, it is helpful to quantify the frequency, duration, and profitability of its independent bets, or “round trip” trades. A round trip trade is started when a new long or short position is opened and then later completely or partially closed out.</p>
+<p>The intent of the round trip tearsheet is to help differentiate strategies that profited off a few lucky trades from strategies that profited repeatedly from genuine alpha. Breaking down round trip profitability by traded name and sector can also help inform universe selection and identify exposure risks. For example, even if your equity curve looks robust, if only two securities in your universe of fifteen names contributed to overall profitability, you may have reason to question the logic of
+your strategy.</p>
+<p>To identify round trips, pyfolio reconstructs the complete portfolio based on the transactions that you pass in. When you make a trade, pyfolio checks if shares are already present in your portfolio purchased at a certain price. If there are, we compute the PnL, returns and duration of that round trip trade. In calculating round trips, pyfolio will also append position closing transactions at the last timestamp in the positions data. This closing transaction will cause the PnL from any open
+positions to realized as completed round trips.</p>
+<div class="section" id="Imports-&amp;-Settins">
+<h2>Imports &amp; Settins<a class="headerlink" href="#Imports-&-Settins" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -490,318 +498,56 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pyfolio</span> <span class="k">as</span> <span class="nn">pf</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">import</span> <span class="nn">gzip</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="Load-data">
-<h2>Load data<a class="headerlink" href="#Load-data" title="Permalink to this headline">¶</a></h2>
-<p>We use some test data for illustration:</p>
+<div class="section" id="Load-Data">
+<h2>Load Data<a class="headerlink" href="#Load-Data" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">transactions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../tests/test_data/test_txn.csv.gz&#39;</span><span class="p">),</span>
+                    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">positions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../tests/test_data/test_pos.csv.gz&#39;</span><span class="p">),</span>
+                    <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">returns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../tests/test_data/test_returns.csv.gz&#39;</span><span class="p">),</span>
+                      <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Add-Sector-Mapping">
+<h2>Add Sector Mapping<a class="headerlink" href="#Add-Sector-Mapping" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">returns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../tests/test_data/test_returns.csv.gz&#39;</span><span class="p">),</span>
-                      <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">positions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../tests/test_data/test_pos.csv.gz&#39;</span><span class="p">),</span>
-                        <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">transactions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;../tests/test_data/test_txn.csv.gz&#39;</span><span class="p">),</span>
-                           <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span></span><span class="c1"># Optional: Sector mappings may be passed in as a dict or pd.Series. If a mapping is</span>
+<span class="c1"># provided, PnL from symbols with mappings will be summed to display profitability by sector.</span>
+<span class="n">sect_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;COST&#39;</span><span class="p">:</span> <span class="s1">&#39;Consumer Goods&#39;</span><span class="p">,</span> <span class="s1">&#39;INTC&#39;</span><span class="p">:</span><span class="s1">&#39;Technology&#39;</span><span class="p">,</span> <span class="s1">&#39;CERN&#39;</span><span class="p">:</span><span class="s1">&#39;Healthcare&#39;</span><span class="p">,</span> <span class="s1">&#39;GPS&#39;</span><span class="p">:</span><span class="s1">&#39;Technology&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;MMM&#39;</span><span class="p">:</span> <span class="s1">&#39;Construction&#39;</span><span class="p">,</span> <span class="s1">&#39;DELL&#39;</span><span class="p">:</span> <span class="s1">&#39;Technology&#39;</span><span class="p">,</span> <span class="s1">&#39;AMD&#39;</span><span class="p">:</span><span class="s1">&#39;Technology&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="Run-Round-Trip-Tear-Sheet">
+<h2>Run Round Trip Tear Sheet<a class="headerlink" href="#Run-Round-Trip-Tear-Sheet" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to run the analysis is to call <code class="docutils literal notranslate"><span class="pre">pyfolio.create_round_trip_tear_sheet()</span></code>. Passing in a sector map is optional. You can also pass <code class="docutils literal notranslate"><span class="pre">round_trips=True</span></code> to <code class="docutils literal notranslate"><span class="pre">pyfolio.create_full_tear_sheet()</span></code> to have this be created along all the other analyses.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">positions</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>AMD</th>
-      <th>CERN</th>
-      <th>COST</th>
-      <th>DELL</th>
-      <th>GPS</th>
-      <th>INTC</th>
-      <th>MMM</th>
-      <th>cash</th>
-    </tr>
-    <tr>
-      <th>index</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2004-01-09 00:00:00+00:00</th>
-      <td>6961.92</td>
-      <td>21017.07875</td>
-      <td>7282.266152</td>
-      <td>21264.55188</td>
-      <td>7091.080020</td>
-      <td>21259.333890</td>
-      <td>21316.129606</td>
-      <td>-6192.360298</td>
-    </tr>
-    <tr>
-      <th>2004-01-12 00:00:00+00:00</th>
-      <td>18198.58</td>
-      <td>18071.25000</td>
-      <td>17675.836401</td>
-      <td>10804.31924</td>
-      <td>10685.411865</td>
-      <td>17872.477480</td>
-      <td>10882.026400</td>
-      <td>-3329.289887</td>
-    </tr>
-    <tr>
-      <th>2004-01-13 00:00:00+00:00</th>
-      <td>12060.86</td>
-      <td>11942.24625</td>
-      <td>12838.477446</td>
-      <td>16078.90380</td>
-      <td>16272.139000</td>
-      <td>12465.392511</td>
-      <td>12579.135758</td>
-      <td>4708.039735</td>
-    </tr>
-    <tr>
-      <th>2004-01-14 00:00:00+00:00</th>
-      <td>13102.40</td>
-      <td>15534.28125</td>
-      <td>14447.422640</td>
-      <td>15414.45080</td>
-      <td>15666.440185</td>
-      <td>14884.069620</td>
-      <td>13454.542620</td>
-      <td>-2749.470030</td>
-    </tr>
-    <tr>
-      <th>2004-01-15 00:00:00+00:00</th>
-      <td>15518.40</td>
-      <td>14547.05000</td>
-      <td>14164.039680</td>
-      <td>14407.48813</td>
-      <td>14926.122619</td>
-      <td>14422.385864</td>
-      <td>13929.159049</td>
-      <td>-2462.919316</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
-</div>
-</div>
-<div class="section" id="Add-Sector-Mappings">
-<h2>Add Sector Mappings<a class="headerlink" href="#Add-Sector-Mappings" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># define our sector mappings</span>
-<span class="n">sect_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;COST&#39;</span><span class="p">:</span> <span class="s1">&#39;Consumer Goods&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;INTC&#39;</span><span class="p">:</span> <span class="s1">&#39;Technology&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;CERN&#39;</span><span class="p">:</span> <span class="s1">&#39;Healthcare&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;GPS&#39;</span><span class="p">:</span> <span class="s1">&#39;Technology&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;MMM&#39;</span><span class="p">:</span> <span class="s1">&#39;Construction&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;DELL&#39;</span><span class="p">:</span> <span class="s1">&#39;Technology&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;AMD&#39;</span><span class="p">:</span> <span class="s1">&#39;Technology&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="Run-Position-Tear-Sheet">
-<h2>Run Position Tear Sheet<a class="headerlink" href="#Run-Position-Tear-Sheet" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">pf</span><span class="o">.</span><span class="n">create_position_tear_sheet</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">sector_mappings</span><span class="o">=</span><span class="n">sect_map</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area rendered_html docutils container">
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>Top 10 long positions of all time</th>
-      <th>max</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>COST</th>
-      <td>90.01%</td>
-    </tr>
-    <tr>
-      <th>DELL</th>
-      <td>85.73%</td>
-    </tr>
-    <tr>
-      <th>CERN</th>
-      <td>83.53%</td>
-    </tr>
-    <tr>
-      <th>MMM</th>
-      <td>82.09%</td>
-    </tr>
-    <tr>
-      <th>INTC</th>
-      <td>78.59%</td>
-    </tr>
-    <tr>
-      <th>AMD</th>
-      <td>75.76%</td>
-    </tr>
-    <tr>
-      <th>GPS</th>
-      <td>62.24%</td>
-    </tr>
-  </tbody>
-</table></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area rendered_html docutils container">
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>Top 10 short positions of all time</th>
-      <th>max</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>AMD</th>
-      <td>-30.12%</td>
-    </tr>
-    <tr>
-      <th>DELL</th>
-      <td>-26.58%</td>
-    </tr>
-    <tr>
-      <th>CERN</th>
-      <td>-25.51%</td>
-    </tr>
-    <tr>
-      <th>MMM</th>
-      <td>-22.62%</td>
-    </tr>
-    <tr>
-      <th>GPS</th>
-      <td>-20.09%</td>
-    </tr>
-    <tr>
-      <th>INTC</th>
-      <td>-18.47%</td>
-    </tr>
-    <tr>
-      <th>COST</th>
-      <td>-16.44%</td>
-    </tr>
-  </tbody>
-</table></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area rendered_html docutils container">
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>Top 10 positions of all time</th>
-      <th>max</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>COST</th>
-      <td>90.01%</td>
-    </tr>
-    <tr>
-      <th>DELL</th>
-      <td>85.73%</td>
-    </tr>
-    <tr>
-      <th>CERN</th>
-      <td>83.53%</td>
-    </tr>
-    <tr>
-      <th>MMM</th>
-      <td>82.09%</td>
-    </tr>
-    <tr>
-      <th>INTC</th>
-      <td>78.59%</td>
-    </tr>
-    <tr>
-      <th>AMD</th>
-      <td>75.76%</td>
-    </tr>
-    <tr>
-      <th>GPS</th>
-      <td>62.24%</td>
-    </tr>
-  </tbody>
-</table></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_sector_mappings_example_12_3.png" src="../_images/notebooks_sector_mappings_example_12_3.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1226,8 +972,464 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sector_mappings_example_13_7.png" src="../_images/notebooks_sector_mappings_example_13_7.png" />
+<img alt="../_images/notebooks_round_trip_tear_sheet_example_11_7.png" src="../_images/notebooks_round_trip_tear_sheet_example_11_7.png" />
 </div>
+</div>
+</div>
+<div class="section" id="Explore-underlying-functions">
+<h2>Explore underlying functions<a class="headerlink" href="#Explore-underlying-functions" title="Permalink to this headline">¶</a></h2>
+<p>Under the hood, several functions are being called. <code class="docutils literal notranslate"><span class="pre">extract_round_trips()</span></code> does the portfolio reconstruction and creates the round-trip trades.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rts</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">round_trips</span><span class="o">.</span><span class="n">extract_round_trips</span><span class="p">(</span><span class="n">transactions</span><span class="p">,</span>
+                                         <span class="n">portfolio_value</span><span class="o">=</span><span class="n">positions</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">returns</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rts</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pnl</th>
+      <th>open_dt</th>
+      <th>close_dt</th>
+      <th>long</th>
+      <th>rt_returns</th>
+      <th>symbol</th>
+      <th>duration</th>
+      <th>returns</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-126.000000</td>
+      <td>2004-01-09 00:00:00+00:00</td>
+      <td>2004-01-13 00:00:00+00:00</td>
+      <td>True</td>
+      <td>-0.022523</td>
+      <td>AMD</td>
+      <td>4 days</td>
+      <td>0.000793</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>50.020000</td>
+      <td>2004-01-09 00:00:00+00:00</td>
+      <td>2004-01-16 00:00:00+00:00</td>
+      <td>True</td>
+      <td>0.078507</td>
+      <td>AMD</td>
+      <td>7 days</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1540.099065</td>
+      <td>2004-01-09 00:00:00+00:00</td>
+      <td>2004-01-20 00:00:00+00:00</td>
+      <td>True</td>
+      <td>0.104696</td>
+      <td>AMD</td>
+      <td>11 days</td>
+      <td>0.000184</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>287.119806</td>
+      <td>2004-01-20 00:00:00+00:00</td>
+      <td>2004-01-21 00:00:00+00:00</td>
+      <td>False</td>
+      <td>0.085155</td>
+      <td>AMD</td>
+      <td>1 days</td>
+      <td>0.000984</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>103.349947</td>
+      <td>2004-01-20 00:00:00+00:00</td>
+      <td>2004-01-22 00:00:00+00:00</td>
+      <td>False</td>
+      <td>0.112198</td>
+      <td>AMD</td>
+      <td>2 days</td>
+      <td>-0.001249</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pf</span><span class="o">.</span><span class="n">round_trips</span><span class="o">.</span><span class="n">print_round_trip_stats</span><span class="p">(</span><span class="n">rts</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Summary stats</th>
+      <th>All trades</th>
+      <th>Short trades</th>
+      <th>Long trades</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Total number of round_trips</th>
+      <td>5819.00</td>
+      <td>1155.00</td>
+      <td>4664.00</td>
+    </tr>
+    <tr>
+      <th>Percent profitable</th>
+      <td>0.50</td>
+      <td>0.52</td>
+      <td>0.49</td>
+    </tr>
+    <tr>
+      <th>Winning round_trips</th>
+      <td>2887.00</td>
+      <td>595.00</td>
+      <td>2292.00</td>
+    </tr>
+    <tr>
+      <th>Losing round_trips</th>
+      <td>2914.00</td>
+      <td>553.00</td>
+      <td>2361.00</td>
+    </tr>
+    <tr>
+      <th>Even round_trips</th>
+      <td>18.00</td>
+      <td>7.00</td>
+      <td>11.00</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>PnL stats</th>
+      <th>All trades</th>
+      <th>Short trades</th>
+      <th>Long trades</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Total profit</th>
+      <td>$67003.94</td>
+      <td>$3531.32</td>
+      <td>$63472.61</td>
+    </tr>
+    <tr>
+      <th>Gross profit</th>
+      <td>$448674.42</td>
+      <td>$20579.67</td>
+      <td>$428094.75</td>
+    </tr>
+    <tr>
+      <th>Gross loss</th>
+      <td>$-381670.48</td>
+      <td>$-17048.35</td>
+      <td>$-364622.13</td>
+    </tr>
+    <tr>
+      <th>Profit factor</th>
+      <td>$1.18</td>
+      <td>$1.21</td>
+      <td>$1.17</td>
+    </tr>
+    <tr>
+      <th>Avg. trade net profit</th>
+      <td>$11.51</td>
+      <td>$3.06</td>
+      <td>$13.61</td>
+    </tr>
+    <tr>
+      <th>Avg. winning trade</th>
+      <td>$155.41</td>
+      <td>$34.59</td>
+      <td>$186.78</td>
+    </tr>
+    <tr>
+      <th>Avg. losing trade</th>
+      <td>$-130.98</td>
+      <td>$-30.83</td>
+      <td>$-154.44</td>
+    </tr>
+    <tr>
+      <th>Ratio Avg. Win:Avg. Loss</th>
+      <td>$1.19</td>
+      <td>$1.12</td>
+      <td>$1.21</td>
+    </tr>
+    <tr>
+      <th>Largest winning trade</th>
+      <td>$9500.14</td>
+      <td>$1623.24</td>
+      <td>$9500.14</td>
+    </tr>
+    <tr>
+      <th>Largest losing trade</th>
+      <td>$-22902.83</td>
+      <td>$-661.29</td>
+      <td>$-22902.83</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Duration stats</th>
+      <th>All trades</th>
+      <th>Short trades</th>
+      <th>Long trades</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Avg duration</th>
+      <td>13 days 03:27:07.702354356</td>
+      <td>2 days 10:39:35.064935064</td>
+      <td>15 days 19:02:40.548885077</td>
+    </tr>
+    <tr>
+      <th>Median duration</th>
+      <td>8 days 00:00:00</td>
+      <td>2 days 00:00:00</td>
+      <td>12 days 00:00:00</td>
+    </tr>
+    <tr>
+      <th>Longest duration</th>
+      <td>84 days 00:00:00</td>
+      <td>13 days 00:00:00</td>
+      <td>84 days 00:00:00</td>
+    </tr>
+    <tr>
+      <th>Shortest duration</th>
+      <td>1 days 00:00:00</td>
+      <td>1 days 00:00:00</td>
+      <td>1 days 00:00:00</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Return stats</th>
+      <th>All trades</th>
+      <th>Short trades</th>
+      <th>Long trades</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Avg returns all round_trips</th>
+      <td>0.01%</td>
+      <td>-0.00%</td>
+      <td>0.01%</td>
+    </tr>
+    <tr>
+      <th>Avg returns winning</th>
+      <td>0.13%</td>
+      <td>0.12%</td>
+      <td>0.13%</td>
+    </tr>
+    <tr>
+      <th>Avg returns losing</th>
+      <td>-0.11%</td>
+      <td>-0.11%</td>
+      <td>-0.11%</td>
+    </tr>
+    <tr>
+      <th>Median returns all round_trips</th>
+      <td>-0.00%</td>
+      <td>-0.00%</td>
+      <td>0.00%</td>
+    </tr>
+    <tr>
+      <th>Median returns winning</th>
+      <td>0.02%</td>
+      <td>0.02%</td>
+      <td>0.02%</td>
+    </tr>
+    <tr>
+      <th>Median returns losing</th>
+      <td>-0.01%</td>
+      <td>-0.02%</td>
+      <td>-0.01%</td>
+    </tr>
+    <tr>
+      <th>Largest winning trade</th>
+      <td>6.78%</td>
+      <td>6.78%</td>
+      <td>6.19%</td>
+    </tr>
+    <tr>
+      <th>Largest losing trade</th>
+      <td>-17.23%</td>
+      <td>-3.92%</td>
+      <td>-17.23%</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Symbol stats</th>
+      <th>AMD</th>
+      <th>CERN</th>
+      <th>COST</th>
+      <th>DELL</th>
+      <th>GPS</th>
+      <th>INTC</th>
+      <th>MMM</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Avg returns all round_trips</th>
+      <td>0.04%</td>
+      <td>-0.01%</td>
+      <td>-0.02%</td>
+      <td>0.02%</td>
+      <td>-0.02%</td>
+      <td>-0.04%</td>
+      <td>0.08%</td>
+    </tr>
+    <tr>
+      <th>Avg returns winning</th>
+      <td>0.13%</td>
+      <td>0.08%</td>
+      <td>0.09%</td>
+      <td>0.12%</td>
+      <td>0.12%</td>
+      <td>0.17%</td>
+      <td>0.16%</td>
+    </tr>
+    <tr>
+      <th>Avg returns losing</th>
+      <td>-0.07%</td>
+      <td>-0.08%</td>
+      <td>-0.10%</td>
+      <td>-0.08%</td>
+      <td>-0.18%</td>
+      <td>-0.21%</td>
+      <td>-0.05%</td>
+    </tr>
+    <tr>
+      <th>Median returns all round_trips</th>
+      <td>0.00%</td>
+      <td>-0.00%</td>
+      <td>-0.00%</td>
+      <td>0.00%</td>
+      <td>0.00%</td>
+      <td>-0.00%</td>
+      <td>0.00%</td>
+    </tr>
+    <tr>
+      <th>Median returns winning</th>
+      <td>0.02%</td>
+      <td>0.01%</td>
+      <td>0.01%</td>
+      <td>0.02%</td>
+      <td>0.02%</td>
+      <td>0.02%</td>
+      <td>0.03%</td>
+    </tr>
+    <tr>
+      <th>Median returns losing</th>
+      <td>-0.01%</td>
+      <td>-0.01%</td>
+      <td>-0.01%</td>
+      <td>-0.01%</td>
+      <td>-0.02%</td>
+      <td>-0.03%</td>
+      <td>-0.01%</td>
+    </tr>
+    <tr>
+      <th>Largest winning trade</th>
+      <td>6.78%</td>
+      <td>1.69%</td>
+      <td>1.48%</td>
+      <td>3.29%</td>
+      <td>2.72%</td>
+      <td>5.01%</td>
+      <td>6.14%</td>
+    </tr>
+    <tr>
+      <th>Largest losing trade</th>
+      <td>-1.59%</td>
+      <td>-6.39%</td>
+      <td>-4.48%</td>
+      <td>-3.28%</td>
+      <td>-17.23%</td>
+      <td>-6.86%</td>
+      <td>-1.60%</td>
+    </tr>
+  </tbody>
+</table></div>
 </div>
 </div>
 </div>
@@ -1238,8 +1440,8 @@ div.rendered_html tbody tr:hover {
               
               <div class='prev-next-bottom'>
                 
-    <a class='left-prev' id="prev-link" href="round_trip_tear_sheet_example.html" title="previous page">Round Trip Analysis</a>
-    <a class='right-next' id="next-link" href="../api-reference.html" title="next page">API</a>
+    <a class='left-prev' id="prev-link" href="zipline_algo_example.html" title="previous page">Zipline Algorithm</a>
+    <a class='right-next' id="next-link" href="sector_mappings_example.html" title="next page">Sector Analysis</a>
 
               </div>
               

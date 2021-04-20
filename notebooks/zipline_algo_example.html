@@ -1,0 +1,2167 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zipline Algorithm &#8212; pyfolio 0.9.3+28.g3dcf744 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Round Trip Analysis" href="round_trip_tear_sheet_example.html" />
+    <link rel="prev" title="Intro" href="single_stock_example.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+      
+      <link rel="icon" sizes="16x16" href="../_static/assets/favicon16x16.ico">
+      
+    
+      
+      <link rel="icon" sizes="32x32" href="../_static/assets/favicon32x32.ico">
+      
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="../index.html">
+<p class="title">pyfolio</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="single_stock_example.html">
+  Intro
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  Zipline Algorithm
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="round_trip_tear_sheet_example.html">
+  Round Trip Analysis
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="sector_mappings_example.html">
+  Sector Analysis
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../api-reference.html">
+  API
+ </a>
+</li>
+
+    
+    <li class="nav-item">
+        <a class="nav-link nav-external" href="https://ml4trading.io">ML for Trading<i class="fas fa-external-link-alt"></i></a>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link nav-external" href="https://exchange.ml4trading.io">Community<i class="fas fa-external-link-alt"></i></a>
+    </li>
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/stefan-jansen/pyfolio-reloaded" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/ml4trading" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Imports-&amp;-Settings">
+   Imports &amp; Settings
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Ingest-Zipline-Bundle">
+   Ingest Zipline Bundle
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Run-Zipline-algorithm">
+   Run Zipline algorithm
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Extract-metrics">
+   Extract metrics
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Single-plot-example">
+   Single plot example
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Full-tear-sheet-example">
+   Full tear sheet example
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#Suppressing-symbol-output">
+   Suppressing symbol output
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+
+<div class="tocsection editthispage">
+    <a href="https://github.com/stefan-jansen/pyfolio-reloaded/edit/main/docs/source/notebooks/zipline_algo_example.ipynb">
+        <i class="fas fa-pencil-alt"></i> Edit this page
+    </a>
+</div>
+
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Zipline-Algorithm">
+<h1>Zipline Algorithm<a class="headerlink" href="#Zipline-Algorithm" title="Permalink to this headline">¶</a></h1>
+<p>Here’s an example where we run an algorithm with zipline, then produce tear sheets for that algorithm.</p>
+<div class="section" id="Imports-&amp;-Settings">
+<h2>Imports &amp; Settings<a class="headerlink" href="#Imports-&-Settings" title="Permalink to this headline">¶</a></h2>
+<p>Import pyfolio and zipline, and ingest the pricing data for backtesting.</p>
+<p>You may have to install <a class="reference external" href="https://zipline.ml4trading.io/">Zipline</a> first; you can do so using either:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># !pip install zipline-reloaded</span>
+</pre></div>
+</div>
+</div>
+<p>or:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># !conda install -c ml4t zipline-reloaded</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pyfolio</span> <span class="k">as</span> <span class="nn">pf</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="c1"># silence warnings</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">zipline</span>
+<span class="o">%</span><span class="k">load_ext</span> zipline
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Ingest-Zipline-Bundle">
+<h2>Ingest Zipline Bundle<a class="headerlink" href="#Ingest-Zipline-Bundle" title="Permalink to this headline">¶</a></h2>
+<p>If you have not yet downloaded <a class="reference external" href="https://zipline.ml4trading.io/bundles.html">data for Zipline</a>, you need to do so first (uncomment and execute the following cell):</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># !zipline ingest</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Run-Zipline-algorithm">
+<h2>Run Zipline algorithm<a class="headerlink" href="#Run-Zipline-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>This algorithm can also be adjusted to execute a modified, or completely different, trading strategy.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%%</span><span class="k">zipline</span> --start 2004-1-1 --end 2010-1-1 -o results.pickle --no-benchmark
+
+# Zipline trading algorithm
+# Taken from zipline.examples.olmar
+
+import numpy as np
+
+from zipline.finance import commission, slippage
+
+STOCKS = [&#39;AMD&#39;, &#39;CERN&#39;, &#39;COST&#39;, &#39;DELL&#39;, &#39;GPS&#39;, &#39;INTC&#39;, &#39;MMM&#39;]
+
+
+# On-Line Portfolio Moving Average Reversion
+
+# More info can be found in the corresponding paper:
+# http://icml.cc/2012/papers/168.pdf
+def initialize(algo, eps=1, window_length=5):
+    algo.stocks = STOCKS
+    algo.sids = [algo.symbol(symbol) for symbol in algo.stocks]
+    algo.m = len(algo.stocks)
+    algo.price = {}
+    algo.b_t = np.ones(algo.m) / algo.m
+    algo.eps = eps
+    algo.window_length = window_length
+
+    algo.set_commission(commission.PerShare(cost=0))
+    algo.set_slippage(slippage.FixedSlippage(spread=0))
+
+
+def handle_data(algo, data):
+    m = algo.m
+
+    x_tilde = np.zeros(m)
+    b = np.zeros(m)
+
+    # find relative moving average price for each asset
+    mavgs = data.history(algo.sids, &#39;price&#39;, algo.window_length, &#39;1d&#39;).mean()
+    for i, sid in enumerate(algo.sids):
+        price = data.current(sid, &quot;price&quot;)
+        # Relative mean deviation
+        x_tilde[i] = mavgs[sid] / price
+
+    ###########################
+    # Inside of OLMAR (algo 2)
+    x_bar = x_tilde.mean()
+
+    # market relative deviation
+    mark_rel_dev = x_tilde - x_bar
+
+    # Expected return with current portfolio
+    exp_return = np.dot(algo.b_t, x_tilde)
+    weight = algo.eps - exp_return
+    variability = (np.linalg.norm(mark_rel_dev)) ** 2
+
+    # test for divide-by-zero case
+    if variability == 0.0:
+        step_size = 0
+    else:
+        step_size = max(0, weight / variability)
+
+    b = algo.b_t + step_size * mark_rel_dev
+    b_norm = simplex_projection(b)
+    np.testing.assert_almost_equal(b_norm.sum(), 1)
+
+    rebalance_portfolio(algo, data, b_norm)
+
+    # update portfolio
+    algo.b_t = b_norm
+
+
+def rebalance_portfolio(algo, data, desired_port):
+    # rebalance portfolio
+    for i, sid in enumerate(algo.sids):
+        algo.order_target_percent(sid, desired_port[i])
+
+
+def simplex_projection(v, b=1):
+    &quot;&quot;&quot;Projection vectors to the simplex domain
+    Implemented according to the paper: Efficient projections onto the
+    l1-ball for learning in high dimensions, John Duchi, et al. ICML 2008.
+    Implementation Time: 2011 June 17 by Bin@libin AT pmail.ntu.edu.sg
+    Optimization Problem: min_{w}\| w - v \|_{2}^{2}
+    s.t. sum_{i=1}^{m}=z, w_{i}\geq 0
+    Input: A vector v \in R^{m}, and a scalar z &gt; 0 (default=1)
+    Output: Projection vector w
+    :Example:
+    &gt;&gt;&gt; proj = simplex_projection([.4 ,.3, -.4, .5])
+    &gt;&gt;&gt; print(proj)
+    array([ 0.33333333, 0.23333333, 0. , 0.43333333])
+    &gt;&gt;&gt; print(proj.sum())
+    1.0
+    Original matlab implementation: John Duchi (jduchi@cs.berkeley.edu)
+    Python-port: Copyright 2013 by Thomas Wiecki (thomas.wiecki@gmail.com).
+    &quot;&quot;&quot;
+
+    v = np.asarray(v)
+    p = len(v)
+
+    # Sort v into u in descending order
+    v = (v &gt; 0) * v
+    u = np.sort(v)[::-1]
+    sv = np.cumsum(u)
+
+    rho = np.where(u &gt; (sv - b) / np.arange(1, p + 1))[0][-1]
+    theta = np.max([0, (sv[rho] - b) / (rho + 1)])
+    w = (v - theta)
+    w[w &lt; 0] = 0
+    return w
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>period_open</th>
+      <th>period_close</th>
+      <th>starting_cash</th>
+      <th>ending_cash</th>
+      <th>portfolio_value</th>
+      <th>longs_count</th>
+      <th>shorts_count</th>
+      <th>long_value</th>
+      <th>short_value</th>
+      <th>returns</th>
+      <th>...</th>
+      <th>period_label</th>
+      <th>algorithm_period_return</th>
+      <th>algo_volatility</th>
+      <th>benchmark_period_return</th>
+      <th>benchmark_volatility</th>
+      <th>alpha</th>
+      <th>beta</th>
+      <th>sharpe</th>
+      <th>sortino</th>
+      <th>max_drawdown</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2004-01-02 21:00:00+00:00</th>
+      <td>2004-01-02 14:31:00+00:00</td>
+      <td>2004-01-02 21:00:00+00:00</td>
+      <td>1.000000e+07</td>
+      <td>1.000000e+07</td>
+      <td>1.000000e+07</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000e+00</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>2004-01</td>
+      <td>0.000000</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>None</td>
+      <td>None</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2004-01-05 21:00:00+00:00</th>
+      <td>2004-01-05 14:31:00+00:00</td>
+      <td>2004-01-05 21:00:00+00:00</td>
+      <td>1.000000e+07</td>
+      <td>-1.261747e+05</td>
+      <td>1.000000e+07</td>
+      <td>7</td>
+      <td>0</td>
+      <td>1.012617e+07</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>...</td>
+      <td>2004-01</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2004-01-06 21:00:00+00:00</th>
+      <td>2004-01-06 14:31:00+00:00</td>
+      <td>2004-01-06 21:00:00+00:00</td>
+      <td>-1.261747e+05</td>
+      <td>-1.639664e+04</td>
+      <td>1.007876e+07</td>
+      <td>7</td>
+      <td>0</td>
+      <td>1.009515e+07</td>
+      <td>0.0</td>
+      <td>0.007876</td>
+      <td>...</td>
+      <td>2004-01</td>
+      <td>0.007876</td>
+      <td>0.072181</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>9.165151</td>
+      <td>NaN</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2004-01-07 21:00:00+00:00</th>
+      <td>2004-01-07 14:31:00+00:00</td>
+      <td>2004-01-07 21:00:00+00:00</td>
+      <td>-1.639664e+04</td>
+      <td>2.168894e+04</td>
+      <td>1.013911e+07</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1.011742e+07</td>
+      <td>0.0</td>
+      <td>0.005989</td>
+      <td>...</td>
+      <td>2004-01</td>
+      <td>0.013911</td>
+      <td>0.064700</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>13.499945</td>
+      <td>NaN</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2004-01-08 21:00:00+00:00</th>
+      <td>2004-01-08 14:31:00+00:00</td>
+      <td>2004-01-08 21:00:00+00:00</td>
+      <td>2.168894e+04</td>
+      <td>3.773005e+04</td>
+      <td>9.897065e+06</td>
+      <td>4</td>
+      <td>0</td>
+      <td>9.859335e+06</td>
+      <td>0.0</td>
+      <td>-0.023873</td>
+      <td>...</td>
+      <td>2004-01</td>
+      <td>-0.010293</td>
+      <td>0.202012</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>-2.497026</td>
+      <td>-2.976346</td>
+      <td>-0.023873</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2009-12-24 18:00:00+00:00</th>
+      <td>2009-12-24 14:31:00+00:00</td>
+      <td>2009-12-24 18:00:00+00:00</td>
+      <td>1.503458e+04</td>
+      <td>2.915782e+04</td>
+      <td>1.613946e+07</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1.611030e+07</td>
+      <td>0.0</td>
+      <td>0.000973</td>
+      <td>...</td>
+      <td>2009-12</td>
+      <td>0.613946</td>
+      <td>0.256421</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.440104</td>
+      <td>0.643345</td>
+      <td>-0.602991</td>
+    </tr>
+    <tr>
+      <th>2009-12-28 21:00:00+00:00</th>
+      <td>2009-12-28 14:31:00+00:00</td>
+      <td>2009-12-28 21:00:00+00:00</td>
+      <td>2.915782e+04</td>
+      <td>-5.396543e+03</td>
+      <td>1.627136e+07</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1.627676e+07</td>
+      <td>0.0</td>
+      <td>0.008173</td>
+      <td>...</td>
+      <td>2009-12</td>
+      <td>0.627136</td>
+      <td>0.256355</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.445253</td>
+      <td>0.650920</td>
+      <td>-0.602991</td>
+    </tr>
+    <tr>
+      <th>2009-12-29 21:00:00+00:00</th>
+      <td>2009-12-29 14:31:00+00:00</td>
+      <td>2009-12-29 21:00:00+00:00</td>
+      <td>-5.396543e+03</td>
+      <td>-1.236016e+04</td>
+      <td>1.639258e+07</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1.640494e+07</td>
+      <td>0.0</td>
+      <td>0.007450</td>
+      <td>...</td>
+      <td>2009-12</td>
+      <td>0.639258</td>
+      <td>0.256286</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.449932</td>
+      <td>0.657801</td>
+      <td>-0.602991</td>
+    </tr>
+    <tr>
+      <th>2009-12-30 21:00:00+00:00</th>
+      <td>2009-12-30 14:31:00+00:00</td>
+      <td>2009-12-30 21:00:00+00:00</td>
+      <td>-1.236016e+04</td>
+      <td>-1.618491e+05</td>
+      <td>1.643268e+07</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1.659453e+07</td>
+      <td>0.0</td>
+      <td>0.002446</td>
+      <td>...</td>
+      <td>2009-12</td>
+      <td>0.643268</td>
+      <td>0.256203</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.451374</td>
+      <td>0.659913</td>
+      <td>-0.602991</td>
+    </tr>
+    <tr>
+      <th>2009-12-31 21:00:00+00:00</th>
+      <td>2009-12-31 14:31:00+00:00</td>
+      <td>2009-12-31 21:00:00+00:00</td>
+      <td>-1.618491e+05</td>
+      <td>-9.192017e+04</td>
+      <td>1.612042e+07</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1.621234e+07</td>
+      <td>0.0</td>
+      <td>-0.019002</td>
+      <td>...</td>
+      <td>2009-12</td>
+      <td>0.612042</td>
+      <td>0.256241</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>None</td>
+      <td>None</td>
+      <td>0.438640</td>
+      <td>0.640975</td>
+      <td>-0.602991</td>
+    </tr>
+  </tbody>
+</table>
+<p>1511 rows × 37 columns</p>
+</div></div>
+</div>
+</div>
+<div class="section" id="Extract-metrics">
+<h2>Extract metrics<a class="headerlink" href="#Extract-metrics" title="Permalink to this headline">¶</a></h2>
+<p>Get the returns, positions, and transactions from the zipline backtest object.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="s1">&#39;results.pickle&#39;</span><span class="p">)</span>
+<span class="n">returns</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">transactions</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">extract_rets_pos_txn_from_zipline</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Single-plot-example">
+<h2>Single plot example<a class="headerlink" href="#Single-plot-example" title="Permalink to this headline">¶</a></h2>
+<p>Make one plot of the top 5 drawdown periods.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pf</span><span class="o">.</span><span class="n">plot_drawdown_periods</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_15_0.png" src="../_images/notebooks_zipline_algo_example_15_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Full-tear-sheet-example">
+<h2>Full tear sheet example<a class="headerlink" href="#Full-tear-sheet-example" title="Permalink to this headline">¶</a></h2>
+<p>Create a full tear sheet for our algorithm. As an example, set the live start date to something arbitrary.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pf</span><span class="o">.</span><span class="n">create_full_tear_sheet</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">transactions</span><span class="o">=</span><span class="n">transactions</span><span class="p">,</span>
+                          <span class="n">live_start_date</span><span class="o">=</span><span class="s1">&#39;2009-10-22&#39;</span><span class="p">,</span> <span class="n">round_trips</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;"><th>Start date</th><td colspan=4>2004-01-02</td></tr>
+    <tr style="text-align: right;"><th>End date</th><td colspan=4>2009-12-31</td></tr>
+    <tr style="text-align: right;"><th>In-sample months</th><td colspan=4>69</td></tr>
+    <tr style="text-align: right;"><th>Out-of-sample months</th><td colspan=4>2</td></tr>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>In-sample</th>
+      <th>Out-of-sample</th>
+      <th>All</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Annual return</th>
+      <td>8.075%</td>
+      <td>14.891%</td>
+      <td>8.289%</td>
+    </tr>
+    <tr>
+      <th>Cumulative returns</th>
+      <td>56.911%</td>
+      <td>2.736%</td>
+      <td>61.204%</td>
+    </tr>
+    <tr>
+      <th>Annual volatility</th>
+      <td>25.743%</td>
+      <td>21.997%</td>
+      <td>25.624%</td>
+    </tr>
+    <tr>
+      <th>Sharpe ratio</th>
+      <td>0.43</td>
+      <td>0.74</td>
+      <td>0.44</td>
+    </tr>
+    <tr>
+      <th>Calmar ratio</th>
+      <td>0.13</td>
+      <td>2.03</td>
+      <td>0.14</td>
+    </tr>
+    <tr>
+      <th>Stability</th>
+      <td>0.01</td>
+      <td>0.04</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>Max drawdown</th>
+      <td>-60.299%</td>
+      <td>-7.332%</td>
+      <td>-60.299%</td>
+    </tr>
+    <tr>
+      <th>Omega ratio</th>
+      <td>1.08</td>
+      <td>1.13</td>
+      <td>1.08</td>
+    </tr>
+    <tr>
+      <th>Sortino ratio</th>
+      <td>0.63</td>
+      <td>1.04</td>
+      <td>0.64</td>
+    </tr>
+    <tr>
+      <th>Skew</th>
+      <td>0.22</td>
+      <td>-0.29</td>
+      <td>0.21</td>
+    </tr>
+    <tr>
+      <th>Kurtosis</th>
+      <td>4.24</td>
+      <td>0.36</td>
+      <td>4.19</td>
+    </tr>
+    <tr>
+      <th>Tail ratio</th>
+      <td>0.99</td>
+      <td>1.23</td>
+      <td>0.97</td>
+    </tr>
+    <tr>
+      <th>Daily value at risk</th>
+      <td>-3.199%</td>
+      <td>-2.707%</td>
+      <td>-3.184%</td>
+    </tr>
+    <tr>
+      <th>Gross leverage</th>
+      <td>1.00</td>
+      <td>1.00</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>Daily turnover</th>
+      <td>15.071%</td>
+      <td>19.106%</td>
+      <td>15.201%</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Worst drawdown periods</th>
+      <th>Net drawdown in %</th>
+      <th>Peak date</th>
+      <th>Valley date</th>
+      <th>Recovery date</th>
+      <th>Duration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>60.30</td>
+      <td>2007-11-06</td>
+      <td>2008-11-20</td>
+      <td>NaT</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>23.25</td>
+      <td>2006-04-06</td>
+      <td>2006-09-07</td>
+      <td>2007-05-22</td>
+      <td>294</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>12.51</td>
+      <td>2004-11-15</td>
+      <td>2005-10-12</td>
+      <td>2006-01-11</td>
+      <td>303</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>10.90</td>
+      <td>2004-06-25</td>
+      <td>2004-08-12</td>
+      <td>2004-11-04</td>
+      <td>95</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>9.47</td>
+      <td>2007-07-16</td>
+      <td>2007-08-06</td>
+      <td>2007-09-04</td>
+      <td>37</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Stress Events</th>
+      <th>mean</th>
+      <th>min</th>
+      <th>max</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Lehman</th>
+      <td>-0.28%</td>
+      <td>-7.42%</td>
+      <td>4.40%</td>
+    </tr>
+    <tr>
+      <th>Aug07</th>
+      <td>0.35%</td>
+      <td>-2.96%</td>
+      <td>3.03%</td>
+    </tr>
+    <tr>
+      <th>Mar08</th>
+      <td>-0.43%</td>
+      <td>-3.10%</td>
+      <td>3.34%</td>
+    </tr>
+    <tr>
+      <th>Sept08</th>
+      <td>-0.68%</td>
+      <td>-7.42%</td>
+      <td>3.99%</td>
+    </tr>
+    <tr>
+      <th>2009Q1</th>
+      <td>-0.35%</td>
+      <td>-4.98%</td>
+      <td>3.36%</td>
+    </tr>
+    <tr>
+      <th>2009Q2</th>
+      <td>0.71%</td>
+      <td>-3.78%</td>
+      <td>6.17%</td>
+    </tr>
+    <tr>
+      <th>Low Volatility Bull Market</th>
+      <td>0.01%</td>
+      <td>-6.11%</td>
+      <td>6.45%</td>
+    </tr>
+    <tr>
+      <th>GFC Crash</th>
+      <td>-0.08%</td>
+      <td>-7.58%</td>
+      <td>9.71%</td>
+    </tr>
+    <tr>
+      <th>Recovery</th>
+      <td>0.32%</td>
+      <td>-3.78%</td>
+      <td>6.17%</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Top 10 long positions of all time</th>
+      <th>max</th>
+    </tr>
+    <tr>
+      <th>sid</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>COST</th>
+      <td>100.75%</td>
+    </tr>
+    <tr>
+      <th>MMM</th>
+      <td>92.36%</td>
+    </tr>
+    <tr>
+      <th>CERN</th>
+      <td>84.47%</td>
+    </tr>
+    <tr>
+      <th>DELL</th>
+      <td>72.76%</td>
+    </tr>
+    <tr>
+      <th>AMD</th>
+      <td>71.05%</td>
+    </tr>
+    <tr>
+      <th>INTC</th>
+      <td>69.19%</td>
+    </tr>
+    <tr>
+      <th>GPS</th>
+      <td>62.11%</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Top 10 short positions of all time</th>
+      <th>max</th>
+    </tr>
+    <tr>
+      <th>sid</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Top 10 positions of all time</th>
+      <th>max</th>
+    </tr>
+    <tr>
+      <th>sid</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>COST</th>
+      <td>100.75%</td>
+    </tr>
+    <tr>
+      <th>MMM</th>
+      <td>92.36%</td>
+    </tr>
+    <tr>
+      <th>CERN</th>
+      <td>84.47%</td>
+    </tr>
+    <tr>
+      <th>DELL</th>
+      <td>72.76%</td>
+    </tr>
+    <tr>
+      <th>AMD</th>
+      <td>71.05%</td>
+    </tr>
+    <tr>
+      <th>INTC</th>
+      <td>69.19%</td>
+    </tr>
+    <tr>
+      <th>GPS</th>
+      <td>62.11%</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Summary stats</th>
+      <th>All trades</th>
+      <th>Short trades</th>
+      <th>Long trades</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Total number of round_trips</th>
+      <td>3988.00</td>
+      <td>3.00</td>
+      <td>3985.00</td>
+    </tr>
+    <tr>
+      <th>Percent profitable</th>
+      <td>0.49</td>
+      <td>0.00</td>
+      <td>0.49</td>
+    </tr>
+    <tr>
+      <th>Winning round_trips</th>
+      <td>1936.00</td>
+      <td>0.00</td>
+      <td>1936.00</td>
+    </tr>
+    <tr>
+      <th>Losing round_trips</th>
+      <td>2041.00</td>
+      <td>0.00</td>
+      <td>2041.00</td>
+    </tr>
+    <tr>
+      <th>Even round_trips</th>
+      <td>11.00</td>
+      <td>3.00</td>
+      <td>8.00</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>PnL stats</th>
+      <th>All trades</th>
+      <th>Short trades</th>
+      <th>Long trades</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Total profit</th>
+      <td>$6120420.82</td>
+      <td>$0.00</td>
+      <td>$6120420.82</td>
+    </tr>
+    <tr>
+      <th>Gross profit</th>
+      <td>$37885663.44</td>
+      <td>$0.00</td>
+      <td>$37885663.44</td>
+    </tr>
+    <tr>
+      <th>Gross loss</th>
+      <td>$-31765242.63</td>
+      <td>$0.00</td>
+      <td>$-31765242.63</td>
+    </tr>
+    <tr>
+      <th>Profit factor</th>
+      <td>$1.19</td>
+      <td>NaN</td>
+      <td>$1.19</td>
+    </tr>
+    <tr>
+      <th>Avg. trade net profit</th>
+      <td>$1534.71</td>
+      <td>$0.00</td>
+      <td>$1535.86</td>
+    </tr>
+    <tr>
+      <th>Avg. winning trade</th>
+      <td>$19569.04</td>
+      <td>NaN</td>
+      <td>$19569.04</td>
+    </tr>
+    <tr>
+      <th>Avg. losing trade</th>
+      <td>$-15563.57</td>
+      <td>NaN</td>
+      <td>$-15563.57</td>
+    </tr>
+    <tr>
+      <th>Ratio Avg. Win:Avg. Loss</th>
+      <td>$1.26</td>
+      <td>NaN</td>
+      <td>$1.26</td>
+    </tr>
+    <tr>
+      <th>Largest winning trade</th>
+      <td>$1553166.81</td>
+      <td>$0.00</td>
+      <td>$1553166.81</td>
+    </tr>
+    <tr>
+      <th>Largest losing trade</th>
+      <td>$-1252569.18</td>
+      <td>$0.00</td>
+      <td>$-1252569.18</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Duration stats</th>
+      <th>All trades</th>
+      <th>Short trades</th>
+      <th>Long trades</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Avg duration</th>
+      <td>21 days 18:41:17.933801404</td>
+      <td>0 days 20:59:59</td>
+      <td>21 days 19:03:57.591718946</td>
+    </tr>
+    <tr>
+      <th>Median duration</th>
+      <td>17 days 23:00:00</td>
+      <td>0 days 20:59:59</td>
+      <td>17 days 23:00:00</td>
+    </tr>
+    <tr>
+      <th>Longest duration</th>
+      <td>109 days 01:00:00</td>
+      <td>0 days 20:59:59</td>
+      <td>109 days 01:00:00</td>
+    </tr>
+    <tr>
+      <th>Shortest duration</th>
+      <td>0 days 03:00:01</td>
+      <td>0 days 20:59:59</td>
+      <td>0 days 03:00:01</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Return stats</th>
+      <th>All trades</th>
+      <th>Short trades</th>
+      <th>Long trades</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Avg returns all round_trips</th>
+      <td>0.01%</td>
+      <td>-0.02%</td>
+      <td>0.01%</td>
+    </tr>
+    <tr>
+      <th>Avg returns winning</th>
+      <td>0.16%</td>
+      <td>NaN</td>
+      <td>0.16%</td>
+    </tr>
+    <tr>
+      <th>Avg returns losing</th>
+      <td>-0.13%</td>
+      <td>-0.02%</td>
+      <td>-0.13%</td>
+    </tr>
+    <tr>
+      <th>Median returns all round_trips</th>
+      <td>-0.00%</td>
+      <td>-0.00%</td>
+      <td>-0.00%</td>
+    </tr>
+    <tr>
+      <th>Median returns winning</th>
+      <td>0.02%</td>
+      <td>NaN</td>
+      <td>0.02%</td>
+    </tr>
+    <tr>
+      <th>Median returns losing</th>
+      <td>-0.01%</td>
+      <td>-0.00%</td>
+      <td>-0.01%</td>
+    </tr>
+    <tr>
+      <th>Largest winning trade</th>
+      <td>12.13%</td>
+      <td>-0.00%</td>
+      <td>12.13%</td>
+    </tr>
+    <tr>
+      <th>Largest losing trade</th>
+      <td>-9.15%</td>
+      <td>-0.05%</td>
+      <td>-9.15%</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Symbol stats</th>
+      <th>AMD</th>
+      <th>CERN</th>
+      <th>COST</th>
+      <th>DELL</th>
+      <th>GPS</th>
+      <th>INTC</th>
+      <th>MMM</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Avg returns all round_trips</th>
+      <td>0.03%</td>
+      <td>0.03%</td>
+      <td>0.00%</td>
+      <td>-0.00%</td>
+      <td>0.03%</td>
+      <td>-0.13%</td>
+      <td>0.07%</td>
+    </tr>
+    <tr>
+      <th>Avg returns winning</th>
+      <td>0.12%</td>
+      <td>0.16%</td>
+      <td>0.11%</td>
+      <td>0.12%</td>
+      <td>0.14%</td>
+      <td>0.14%</td>
+      <td>0.25%</td>
+    </tr>
+    <tr>
+      <th>Avg returns losing</th>
+      <td>-0.07%</td>
+      <td>-0.10%</td>
+      <td>-0.09%</td>
+      <td>-0.11%</td>
+      <td>-0.11%</td>
+      <td>-0.26%</td>
+      <td>-0.15%</td>
+    </tr>
+    <tr>
+      <th>Median returns all round_trips</th>
+      <td>0.00%</td>
+      <td>-0.00%</td>
+      <td>-0.00%</td>
+      <td>-0.00%</td>
+      <td>0.00%</td>
+      <td>-0.00%</td>
+      <td>0.00%</td>
+    </tr>
+    <tr>
+      <th>Median returns winning</th>
+      <td>0.01%</td>
+      <td>0.01%</td>
+      <td>0.02%</td>
+      <td>0.01%</td>
+      <td>0.02%</td>
+      <td>0.01%</td>
+      <td>0.04%</td>
+    </tr>
+    <tr>
+      <th>Median returns losing</th>
+      <td>-0.01%</td>
+      <td>-0.01%</td>
+      <td>-0.01%</td>
+      <td>-0.01%</td>
+      <td>-0.01%</td>
+      <td>-0.02%</td>
+      <td>-0.01%</td>
+    </tr>
+    <tr>
+      <th>Largest winning trade</th>
+      <td>2.22%</td>
+      <td>12.13%</td>
+      <td>2.06%</td>
+      <td>3.36%</td>
+      <td>3.16%</td>
+      <td>1.63%</td>
+      <td>7.84%</td>
+    </tr>
+    <tr>
+      <th>Largest losing trade</th>
+      <td>-2.87%</td>
+      <td>-5.52%</td>
+      <td>-4.20%</td>
+      <td>-4.87%</td>
+      <td>-7.19%</td>
+      <td>-9.15%</td>
+      <td>-8.30%</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Profitability (PnL / PnL total) per name</th>
+      <th></th>
+    </tr>
+    <tr>
+      <th>symbol</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>INTC</th>
+      <td>45.09%</td>
+    </tr>
+    <tr>
+      <th>COST</th>
+      <td>42.43%</td>
+    </tr>
+    <tr>
+      <th>CERN</th>
+      <td>35.53%</td>
+    </tr>
+    <tr>
+      <th>MMM</th>
+      <td>13.51%</td>
+    </tr>
+    <tr>
+      <th>GPS</th>
+      <td>-2.48%</td>
+    </tr>
+    <tr>
+      <th>AMD</th>
+      <td>-7.16%</td>
+    </tr>
+    <tr>
+      <th>DELL</th>
+      <td>-26.91%</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_17_12.png" src="../_images/notebooks_zipline_algo_example_17_12.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_17_13.png" src="../_images/notebooks_zipline_algo_example_17_13.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_17_14.png" src="../_images/notebooks_zipline_algo_example_17_14.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_17_15.png" src="../_images/notebooks_zipline_algo_example_17_15.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_17_16.png" src="../_images/notebooks_zipline_algo_example_17_16.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Suppressing-symbol-output">
+<h2>Suppressing symbol output<a class="headerlink" href="#Suppressing-symbol-output" title="Permalink to this headline">¶</a></h2>
+<p>When sharing tear sheets it might be undesirable to display which symbols where used by a strategy. To suppress these in the tear sheet you can pass <code class="docutils literal notranslate"><span class="pre">hide_positions=True</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pf</span><span class="o">.</span><span class="n">create_full_tear_sheet</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">transactions</span><span class="o">=</span><span class="n">transactions</span><span class="p">,</span>
+                          <span class="n">live_start_date</span><span class="o">=</span><span class="s1">&#39;2009-10-22&#39;</span><span class="p">,</span> <span class="n">hide_positions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Entire data start date: 2004-01-02
+Entire data end date: 2009-12-31
+In-sample months: 69
+Out-of-sample months: 2
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>All</th>
+      <th>In-sample</th>
+      <th>Out-of-sample</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Annual return</th>
+      <td>8.3%</td>
+      <td>8.1%</td>
+      <td>14.9%</td>
+    </tr>
+    <tr>
+      <th>Cumulative returns</th>
+      <td>61.1%</td>
+      <td>56.8%</td>
+      <td>2.7%</td>
+    </tr>
+    <tr>
+      <th>Annual volatility</th>
+      <td>25.6%</td>
+      <td>25.7%</td>
+      <td>22.0%</td>
+    </tr>
+    <tr>
+      <th>Sharpe ratio</th>
+      <td>0.44</td>
+      <td>0.43</td>
+      <td>0.74</td>
+    </tr>
+    <tr>
+      <th>Calmar ratio</th>
+      <td>0.14</td>
+      <td>0.13</td>
+      <td>2.03</td>
+    </tr>
+    <tr>
+      <th>Stability</th>
+      <td>0.00</td>
+      <td>0.01</td>
+      <td>0.04</td>
+    </tr>
+    <tr>
+      <th>Max drawdown</th>
+      <td>-60.3%</td>
+      <td>-60.3%</td>
+      <td>-7.3%</td>
+    </tr>
+    <tr>
+      <th>Omega ratio</th>
+      <td>1.08</td>
+      <td>1.08</td>
+      <td>1.13</td>
+    </tr>
+    <tr>
+      <th>Sortino ratio</th>
+      <td>0.64</td>
+      <td>0.63</td>
+      <td>1.04</td>
+    </tr>
+    <tr>
+      <th>Skew</th>
+      <td>0.21</td>
+      <td>0.22</td>
+      <td>-0.29</td>
+    </tr>
+    <tr>
+      <th>Kurtosis</th>
+      <td>4.19</td>
+      <td>4.24</td>
+      <td>0.36</td>
+    </tr>
+    <tr>
+      <th>Tail ratio</th>
+      <td>0.97</td>
+      <td>0.99</td>
+      <td>1.23</td>
+    </tr>
+    <tr>
+      <th>Daily value at risk</th>
+      <td>-3.2%</td>
+      <td>-3.2%</td>
+      <td>-2.7%</td>
+    </tr>
+    <tr>
+      <th>Gross leverage</th>
+      <td>1.00</td>
+      <td>1.00</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>Daily turnover</th>
+      <td>7.6%</td>
+      <td>7.5%</td>
+      <td>9.6%</td>
+    </tr>
+    <tr>
+      <th>Alpha</th>
+      <td>0.09</td>
+      <td>0.10</td>
+      <td>-0.03</td>
+    </tr>
+    <tr>
+      <th>Beta</th>
+      <td>0.83</td>
+      <td>0.82</td>
+      <td>1.19</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Worst drawdown periods</th>
+      <th>Net drawdown in %</th>
+      <th>Peak date</th>
+      <th>Valley date</th>
+      <th>Recovery date</th>
+      <th>Duration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>60.30</td>
+      <td>2007-11-06</td>
+      <td>2008-11-20</td>
+      <td>NaT</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>23.25</td>
+      <td>2006-04-06</td>
+      <td>2006-09-07</td>
+      <td>2007-05-22</td>
+      <td>294</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>12.52</td>
+      <td>2004-11-15</td>
+      <td>2005-10-12</td>
+      <td>2006-01-11</td>
+      <td>303</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>10.90</td>
+      <td>2004-06-25</td>
+      <td>2004-08-12</td>
+      <td>2004-11-04</td>
+      <td>95</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>9.47</td>
+      <td>2007-07-16</td>
+      <td>2007-08-06</td>
+      <td>2007-09-04</td>
+      <td>37</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_19_3.png" src="../_images/notebooks_zipline_algo_example_19_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Stress Events</th>
+      <th>mean</th>
+      <th>min</th>
+      <th>max</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Lehmann</th>
+      <td>-0.28%</td>
+      <td>-7.41%</td>
+      <td>4.40%</td>
+    </tr>
+    <tr>
+      <th>Aug07</th>
+      <td>0.35%</td>
+      <td>-2.96%</td>
+      <td>3.03%</td>
+    </tr>
+    <tr>
+      <th>Mar08</th>
+      <td>-0.43%</td>
+      <td>-3.10%</td>
+      <td>3.34%</td>
+    </tr>
+    <tr>
+      <th>Sept08</th>
+      <td>-0.68%</td>
+      <td>-7.41%</td>
+      <td>3.99%</td>
+    </tr>
+    <tr>
+      <th>2009Q1</th>
+      <td>-0.35%</td>
+      <td>-4.98%</td>
+      <td>3.36%</td>
+    </tr>
+    <tr>
+      <th>2009Q2</th>
+      <td>0.71%</td>
+      <td>-3.78%</td>
+      <td>6.17%</td>
+    </tr>
+    <tr>
+      <th>Low Volatility Bull Market</th>
+      <td>0.01%</td>
+      <td>-6.11%</td>
+      <td>6.45%</td>
+    </tr>
+    <tr>
+      <th>GFC Crash</th>
+      <td>-0.08%</td>
+      <td>-7.58%</td>
+      <td>9.71%</td>
+    </tr>
+    <tr>
+      <th>Recovery</th>
+      <td>0.32%</td>
+      <td>-3.78%</td>
+      <td>6.17%</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_19_5.png" src="../_images/notebooks_zipline_algo_example_19_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_19_6.png" src="../_images/notebooks_zipline_algo_example_19_6.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_zipline_algo_example_19_7.png" src="../_images/notebooks_zipline_algo_example_19_7.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="single_stock_example.html" title="previous page">Intro</a>
+    <a class='right-next' id="next-link" href="round_trip_tear_sheet_example.html" title="next page">Round Trip Analysis</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+    
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+
+    
+    <!-- Google Analytics -->
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-74956955-3', 'auto');
+      ga('set', 'anonymizeIp', true);
+      ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    <!-- End Google Analytics -->
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2016, Quantopian, Inc..<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

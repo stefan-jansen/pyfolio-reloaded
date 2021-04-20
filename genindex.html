@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; pyfolio 0.9.3+28.g3dcf744 documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+      
+      <link rel="icon" sizes="16x16" href="_static/assets/favicon16x16.ico">
+      
+    
+      
+      <link rel="icon" sizes="32x32" href="_static/assets/favicon32x32.ico">
+      
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+<a class="navbar-brand" href="index.html">
+<p class="title">pyfolio</p>
+</a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="notebooks/single_stock_example.html">
+  Intro
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="notebooks/zipline_algo_example.html">
+  Zipline Algorithm
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="notebooks/round_trip_tear_sheet_example.html">
+  Round Trip Analysis
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="notebooks/sector_mappings_example.html">
+  Sector Analysis
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="api-reference.html">
+  API
+ </a>
+</li>
+
+    
+    <li class="nav-item">
+        <a class="nav-link nav-external" href="https://ml4trading.io">ML for Trading<i class="fas fa-external-link-alt"></i></a>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link nav-external" href="https://exchange.ml4trading.io">Community<i class="fas fa-external-link-alt"></i></a>
+    </li>
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/stefan-jansen/pyfolio-reloaded" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/ml4trading" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ 
+</div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.aggregate_returns">aggregate_returns() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.alpha">alpha() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.alpha_beta">alpha_beta() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.annual_return">annual_return() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.annual_volatility">annual_volatility() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.beta">beta() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.calc_bootstrap">calc_bootstrap() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.calc_distribution_stats">calc_distribution_stats() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.calmar_ratio">calmar_ratio() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.utils.check_intraday">check_intraday() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.utils.clip_returns_to_benchmark">clip_returns_to_benchmark() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.common_sense_ratio">common_sense_ratio() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.perf_attrib.compute_exposures">compute_exposures() (in module pyfolio.perf_attrib)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.utils.configure_legend">configure_legend() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.tears.create_capacity_tear_sheet">create_capacity_tear_sheet() (in module pyfolio.tears)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.tears.create_full_tear_sheet">create_full_tear_sheet() (in module pyfolio.tears)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.tears.create_interesting_times_tear_sheet">create_interesting_times_tear_sheet() (in module pyfolio.tears)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.perf_attrib.create_perf_attrib_stats">create_perf_attrib_stats() (in module pyfolio.perf_attrib)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.tears.create_perf_attrib_tear_sheet">create_perf_attrib_tear_sheet() (in module pyfolio.tears)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.tears.create_position_tear_sheet">create_position_tear_sheet() (in module pyfolio.tears)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.tears.create_returns_tear_sheet">create_returns_tear_sheet() (in module pyfolio.tears)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.tears.create_round_trip_tear_sheet">create_round_trip_tear_sheet() (in module pyfolio.tears)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.tears.create_simple_tear_sheet">create_simple_tear_sheet() (in module pyfolio.tears)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.tears.create_txn_tear_sheet">create_txn_tear_sheet() (in module pyfolio.tears)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.cum_returns">cum_returns() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.customize">customize() (in module pyfolio.plotting)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.utils.detect_intraday">detect_intraday() (in module pyfolio.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.downside_risk">downside_risk() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.utils.estimate_intraday">estimate_intraday() (in module pyfolio.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.extract_interesting_date_ranges">extract_interesting_date_ranges() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.utils.extract_rets_pos_txn_from_zipline">extract_rets_pos_txn_from_zipline() (in module pyfolio.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.forecast_cone_bootstrap">forecast_cone_bootstrap() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.utils.format_asset">format_asset() (in module pyfolio.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.gen_drawdown_table">gen_drawdown_table() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.get_max_drawdown">get_max_drawdown() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.get_max_drawdown_underwater">get_max_drawdown_underwater() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.utils.get_symbol_rets">get_symbol_rets() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.get_top_drawdowns">get_top_drawdowns() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.gross_lev">gross_lev() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.max_drawdown">max_drawdown() (in module pyfolio.timeseries)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="api-reference.html#module-pyfolio.perf_attrib">pyfolio.perf_attrib</a>
+</li>
+        <li><a href="api-reference.html#module-pyfolio.plotting">pyfolio.plotting</a>
+</li>
+        <li><a href="api-reference.html#module-pyfolio.tears">pyfolio.tears</a>
+</li>
+        <li><a href="api-reference.html#module-pyfolio.timeseries">pyfolio.timeseries</a>
+</li>
+        <li><a href="api-reference.html#module-pyfolio.utils">pyfolio.utils</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.normalize">normalize() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.omega_ratio">omega_ratio() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.utils.one_dec_places">one_dec_places() (in module pyfolio.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.utils.percentage">percentage() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.perf_attrib.perf_attrib">perf_attrib() (in module pyfolio.perf_attrib)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.perf_stats">perf_stats() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.perf_stats_bootstrap">perf_stats_bootstrap() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.perf_attrib.plot_alpha_returns">plot_alpha_returns() (in module pyfolio.perf_attrib)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_annual_returns">plot_annual_returns() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_capacity_sweep">plot_capacity_sweep() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_cones">plot_cones() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_daily_turnover_hist">plot_daily_turnover_hist() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_daily_volume">plot_daily_volume() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_drawdown_periods">plot_drawdown_periods() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_drawdown_underwater">plot_drawdown_underwater() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_exposures">plot_exposures() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.perf_attrib.plot_factor_contribution_to_perf">plot_factor_contribution_to_perf() (in module pyfolio.perf_attrib)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_gross_leverage">plot_gross_leverage() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_holdings">plot_holdings() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_long_short_holdings">plot_long_short_holdings() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_max_median_position_concentration">plot_max_median_position_concentration() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_monthly_returns_dist">plot_monthly_returns_dist() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_monthly_returns_heatmap">plot_monthly_returns_heatmap() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_monthly_returns_timeseries">plot_monthly_returns_timeseries() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_perf_stats">plot_perf_stats() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_prob_profit_trade">plot_prob_profit_trade() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_return_quantiles">plot_return_quantiles() (in module pyfolio.plotting)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.perf_attrib.plot_returns">plot_returns() (in module pyfolio.perf_attrib)</a>
+
+      <ul>
+        <li><a href="api-reference.html#pyfolio.plotting.plot_returns">(in module pyfolio.plotting)</a>
+</li>
+      </ul></li>
+      <li><a href="api-reference.html#pyfolio.perf_attrib.plot_risk_exposures">plot_risk_exposures() (in module pyfolio.perf_attrib)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_rolling_beta">plot_rolling_beta() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_rolling_returns">plot_rolling_returns() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_rolling_sharpe">plot_rolling_sharpe() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_rolling_volatility">plot_rolling_volatility() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_round_trip_lifetimes">plot_round_trip_lifetimes() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_sector_allocations">plot_sector_allocations() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_slippage_sensitivity">plot_slippage_sensitivity() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_slippage_sweep">plot_slippage_sweep() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_turnover">plot_turnover() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.plot_txn_time_hist">plot_txn_time_hist() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.utils.print_table">print_table() (in module pyfolio.utils)</a>
+</li>
+      <li>
+    pyfolio.perf_attrib
+
+      <ul>
+        <li><a href="api-reference.html#module-pyfolio.perf_attrib">module</a>
+</li>
+      </ul></li>
+      <li>
+    pyfolio.plotting
+
+      <ul>
+        <li><a href="api-reference.html#module-pyfolio.plotting">module</a>
+</li>
+      </ul></li>
+      <li>
+    pyfolio.tears
+
+      <ul>
+        <li><a href="api-reference.html#module-pyfolio.tears">module</a>
+</li>
+      </ul></li>
+      <li>
+    pyfolio.timeseries
+
+      <ul>
+        <li><a href="api-reference.html#module-pyfolio.timeseries">module</a>
+</li>
+      </ul></li>
+      <li>
+    pyfolio.utils
+
+      <ul>
+        <li><a href="api-reference.html#module-pyfolio.utils">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.utils.register_return_func">register_return_func() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.rolling_beta">rolling_beta() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.rolling_regression">rolling_regression() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.rolling_sharpe">rolling_sharpe() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.rolling_volatility">rolling_volatility() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.utils.sample_colormap">sample_colormap() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.sharpe_ratio">sharpe_ratio() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.show_and_plot_top_positions">show_and_plot_top_positions() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.perf_attrib.show_perf_attrib_stats">show_perf_attrib_stats() (in module pyfolio.perf_attrib)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.show_perf_stats">show_perf_stats() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.plotting.show_profit_attribution">show_profit_attribution() (in module pyfolio.plotting)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.plotting.show_worst_drawdown_periods">show_worst_drawdown_periods() (in module pyfolio.plotting)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.simulate_paths">simulate_paths() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.sortino_ratio">sortino_ratio() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.stability_of_timeseries">stability_of_timeseries() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.utils.standardize_data">standardize_data() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.timeseries.summarize_paths">summarize_paths() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.tail_ratio">tail_ratio() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.tears.timer">timer() (in module pyfolio.tears)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.utils.to_series">to_series() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.utils.to_utc">to_utc() (in module pyfolio.utils)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.utils.two_dec_places">two_dec_places() (in module pyfolio.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.value_at_risk">value_at_risk() (in module pyfolio.timeseries)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-reference.html#pyfolio.timeseries.var_cov_var_normal">var_cov_var_normal() (in module pyfolio.timeseries)</a>
+</li>
+      <li><a href="api-reference.html#pyfolio.utils.vectorize">vectorize() (in module pyfolio.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+    
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+
+    
+    <!-- Google Analytics -->
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-74956955-3', 'auto');
+      ga('set', 'anonymizeIp', true);
+      ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    <!-- End Google Analytics -->
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2016, Quantopian, Inc..<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
