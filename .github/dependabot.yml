@@ -12,5 +12,3 @@ updates:
       - dependency-name: "actions/upload-artifact"
       - dependency-name: "actions/download-artifact"
       - dependency-name: "actions/setup-python"
-      - dependency-name: "pypa/gh-action-pypi-publish"
-      - dependency-name: "conda-incubator/setup-miniconda"
