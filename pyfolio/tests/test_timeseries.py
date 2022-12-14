@@ -356,7 +356,7 @@ class TestCone(TestCase):
             num_samples=10000,
         )
 
-        for col, vals in bootstrap_cone.iteritems():
+        for col, vals in bootstrap_cone.items():
             expected = normal_cone[col].values
             assert_allclose(vals.values, expected, rtol=0.005)
 

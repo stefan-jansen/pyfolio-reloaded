@@ -671,7 +671,7 @@ def show_perf_stats(
         perf_stats = pd.DataFrame(perf_stats_all, columns=["Backtest"])
 
     for column in perf_stats.columns:
-        for stat, value in perf_stats[column].iteritems():
+        for stat, value in perf_stats[column].items():
             if stat in STAT_FUNCS_PCT:
                 perf_stats.loc[stat, column] = (
                     str(np.round(value * 100, 3)) + "%"
@@ -837,7 +837,7 @@ def plot_rolling_returns(
         oos_cum_returns = cum_rets.loc[cum_rets.index >= live_start_date]
     else:
         is_cum_returns = cum_rets
-        oos_cum_returns = pd.Series([])
+        oos_cum_returns = pd.Series([], dtype='float64')
 
     is_cum_returns.plot(
         lw=2, color="forestgreen", alpha=0.6, label="Backtest", ax=ax, **kwargs
