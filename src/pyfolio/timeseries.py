@@ -729,9 +729,9 @@ def perf_stats(
     for stat_func in SIMPLE_STAT_FUNCS:
         stats[STAT_FUNC_NAMES[stat_func.__name__]] = stat_func(returns)
 
-    if positions is not None:
+    if not (positions is None or positions.empty):
         stats["Gross leverage"] = gross_lev(positions).mean()
-        if transactions is not None:
+        if not (transactions is None or transactions.empty):
             stats["Daily turnover"] = get_turnover(
                 positions, transactions, turnover_denom
             ).mean()
