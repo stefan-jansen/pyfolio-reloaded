@@ -52,7 +52,7 @@ requires = [
     'setuptools>=54.0.0',
     "setuptools_scm[toml]>=6.2",
     'wheel>=0.31.0',
-    'oldest-supported-numpy; python_version>="3.7"',
+    'oldest-supported-numpy; python_version>="3.8"',
 ]
 build-backend = 'setuptools.build_meta'
 
@@ -106,7 +106,7 @@ addopts = '-v'
 
 [tool.cibuildwheel]
 test-extras = "test"
-test-command = "pytest -n 2 --reruns 5 {package}/tests"
+test-command = "pytest -n 2 {package}/tests"
 build-verbosity = 3
 
 
