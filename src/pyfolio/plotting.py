@@ -585,6 +585,11 @@ def show_perf_stats(
          - For more information, see timeseries.perf_stats_bootstrap
     header_rows : dict or OrderedDict, optional
         Extra rows to display at the top of the displayed table.
+
+    Returns
+    -------
+    perf_stats : pd.DataFrame
+        DataFrame with displayed statistics.
     """
 
     if bootstrap:
@@ -675,6 +680,8 @@ def show_perf_stats(
         float_format="{0:.2f}".format,
         header_rows=header_rows,
     )
+
+    return perf_stats
 
 
 def plot_returns(returns, live_start_date=None, ax=None):
