@@ -312,8 +312,8 @@ def check_intraday(estimate, returns, positions, transactions):
         if positions is not None and transactions is not None:
             if detect_intraday(positions, transactions):
                 warnings.warn(
-                    "Detected intraday strategy; inferring positi"
-                    + "ons from transactions. Set estimate_intraday"
+                    "Detected intraday strategy; inferring positions"
+                    + "from transactions. Set estimate_intraday"
                     + "=False to disable."
                 )
                 return estimate_intraday(returns, positions, transactions)
