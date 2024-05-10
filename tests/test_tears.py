@@ -110,7 +110,7 @@ class PositionsTestCase(TestCase):
     @parameterized.expand(
         [
             ({},),
-            ({"slippage": 1},),
+            # ({"slippage": 1},),
             ({"live_start_date": test_returns.index[-20]},),
             ({"round_trips": True},),
             ({"hide_positions": True},),

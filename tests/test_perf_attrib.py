@@ -511,7 +511,7 @@ class PerfAttribTestCase(unittest.TestCase):
                 ["AAPL", "TLT", "XOM"], level="ticker"
             )
 
-            with self.assertRaisesRegexp(
+            with self.assertRaisesRegex(
                 ValueError, "No factor loadings were available"
             ):
 
