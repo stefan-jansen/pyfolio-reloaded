@@ -37,7 +37,7 @@ def perf_attrib(
     """
     Attributes the performance of a returns stream to a set of risk factors.
 
-    Preprocesses inputs, and then calls empyrical.perf_attrib. See
+    Pre-processes inputs, and then calls empyrical.perf_attrib. See
     empyrical.perf_attrib for more info.
 
     Performance attribution determines how much each risk factor, e.g.,
