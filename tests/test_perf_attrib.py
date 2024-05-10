@@ -14,7 +14,9 @@ TEST_DATA = Path(__file__).parent / "test_data"
 
 
 def _empyrical_compat_perf_attrib_result(index, columns, data):
-    if ep.__version__ < "0.5.2":
+    major, minor, micro = ep.__version__.split(".")
+    major, minor, micro = int(major), int(minor), int(micro)
+    if major == 0 and (minor < 5 or (minor == 5 and micro < 2)):
         # Newer columns were added in empyrical v0.5.2. These exist in older
         # and newer empyrical:
         columns = [
