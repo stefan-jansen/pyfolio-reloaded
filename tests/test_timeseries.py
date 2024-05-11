@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from pyfolio import timeseries
-from pyfolio.utils import to_utc, to_series, pandas_one_point_two_or_less
+from pyfolio.utils import to_utc, to_series, pandas_one_point_three_or_less
 
 import gzip
 
@@ -297,7 +297,7 @@ class TestStats(TestCase):
             )
         ]
     )
-    @skipIf(pandas_one_point_two_or_less, "pandas<=1.2 returns np.inf not np.nan")
+    @skipIf(pandas_one_point_three_or_less, "pandas<=1.2 returns np.inf not np.nan")
     def test_sharpe_2(self, returns, rolling_sharpe_window, expected):
         np.testing.assert_array_almost_equal(
             timeseries.rolling_sharpe(returns, rolling_sharpe_window).to_numpy(),
