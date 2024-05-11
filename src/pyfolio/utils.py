@@ -70,7 +70,7 @@ COLORS = [
 
 pandas_version = Version(pd.__version__)
 
-pandas_one_point_one_or_less = pandas_version < Version("1.2")
+pandas_one_point_two_or_less = pandas_version <= Version("1.2")
 
 
 def one_dec_places(x, pos):
