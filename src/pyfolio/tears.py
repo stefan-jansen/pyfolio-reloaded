@@ -907,6 +907,7 @@ def create_round_trip_tear_sheet(
     )
 
     transactions_closed = round_trips.add_closing_transactions(positions, transactions)
+
     # extract_round_trips requires BoD portfolio_value
     trades = round_trips.extract_round_trips(
         transactions_closed,

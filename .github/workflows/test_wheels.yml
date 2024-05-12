@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ 3.7, 3.8, 3.9 ]
+        python-version: [ "3.9", "3.10", "3.11", "3.12" ]
     steps:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -20,4 +20,4 @@ jobs:
         run: |
           pip install -U pip wheel
           pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pyfolio-reloaded[test]
-          nosetests pyfolio.tests
+          pytest tests

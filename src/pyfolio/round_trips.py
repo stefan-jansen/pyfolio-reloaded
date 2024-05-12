@@ -27,18 +27,22 @@ PNL_STATS = [
     ("Gross loss", lambda x: x[x < 0].sum()),
     (
         "Profit factor",
-        lambda x: x[x > 0].sum() / x[x < 0].abs().sum()
-        if x[x < 0].abs().sum() != 0
-        else np.nan,
+        lambda x: (
+            x[x > 0].sum() / x[x < 0].abs().sum()
+            if x[x < 0].abs().sum() != 0
+            else np.nan
+        ),
     ),
     ("Avg. trade net profit", "mean"),
     ("Avg. winning trade", lambda x: x[x > 0].mean()),
     ("Avg. losing trade", lambda x: x[x < 0].mean()),
     (
         "Ratio Avg. Win:Avg. Loss",
-        lambda x: x[x > 0].mean() / x[x < 0].abs().mean()
-        if x[x < 0].abs().mean() != 0
-        else np.nan,
+        lambda x: (
+            x[x > 0].mean() / x[x < 0].abs().mean()
+            if x[x < 0].abs().mean() != 0
+            else np.nan
+        ),
     ),
     ("Largest winning trade", "max"),
     ("Largest losing trade", "min"),
@@ -67,7 +71,7 @@ DURATION_STATS = [
     ("Avg duration", lambda x: x.mean()),
     ("Median duration", lambda x: x.median()),
     ("Longest duration", lambda x: x.max()),
-    ("Shortest duration", lambda x: x.min())
+    ("Shortest duration", lambda x: x.min()),
     #  FIXME: Instead of x.max() - x.min() this should be
     #  rts.close_dt.max() - rts.open_dt.min() which is not
     #  available here. As it would require a new approach here
@@ -164,7 +168,7 @@ def extract_round_trips(transactions, portfolio_value=None):
     2004-01-13 14:41:23    -10      100      'AAPL'
     2004-01-13 15:23:34    -10      200       'AAPL'
 
-    First, the first two and last two round_trips will be merged into a two
+    First, the first two and last two round_trips will be merged into two
     single transactions (computing the price via vwap). Then, during
     the portfolio reconstruction, the two resulting transactions will
     be merged and result in 1 round-trip trade with a PnL of
@@ -192,8 +196,8 @@ def extract_round_trips(transactions, portfolio_value=None):
     round_trips : pd.DataFrame
         DataFrame with one row per round trip.  The returns column
         contains returns in respect to the portfolio value while
-        rt_returns are the returns in regards to the invested capital
-        into that partiulcar round-trip.
+        rt_returns are the returns regarding the invested capital
+        into that particular round-trip.
     """
 
     transactions = _groupby_consecutive(transactions)

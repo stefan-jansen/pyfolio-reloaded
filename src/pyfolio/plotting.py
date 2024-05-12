@@ -12,8 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import datetime
 import calendar
+import datetime
 from collections import OrderedDict
 from functools import wraps
 
@@ -25,11 +25,11 @@ import numpy as np
 import pandas as pd
 import pytz
 import scipy as sp
+import seaborn as sns
 from matplotlib import figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.ticker import FuncFormatter
 
-import seaborn as sns
 from . import capacity
 from . import pos
 from . import timeseries
@@ -444,7 +444,10 @@ def plot_drawdown_periods(returns, top=10, ax=None, **kwargs):
 
     lim = ax.get_ylim()
     colors = sns.cubehelix_palette(len(df_drawdowns))[::-1]
-    for i, (peak, recovery) in df_drawdowns[["Peak date", "Recovery date"]].iterrows():
+    # print(df_drawdowns)
+    for i, (peak, recovery) in (
+        df_drawdowns[["Peak date", "Recovery date"]].dropna(how="all").iterrows()
+    ):
         if pd.isnull(recovery):
             recovery = returns.index[-1]
         ax.fill_between((peak, recovery), lim[0], lim[1], alpha=0.4, color=colors[i])
@@ -548,6 +551,7 @@ def show_perf_stats(
     live_start_date=None,
     bootstrap=False,
     header_rows=None,
+    return_df=False,
 ):
     """
     Prints some performance metrics of the strategy.
@@ -670,6 +674,8 @@ def show_perf_stats(
         header_rows = OrderedDict(header_rows)
         header_rows.update(date_rows)
 
+    if return_df:
+        return perf_stats
     utils.print_table(
         perf_stats,
         float_format="{0:.2f}".format,

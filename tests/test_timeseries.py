@@ -6,8 +6,8 @@ from pandas.testing import assert_series_equal
 import numpy as np
 import pandas as pd
 
-from src.pyfolio import timeseries
-from pyfolio.utils import to_utc, to_series, pandas_one_point_one_or_less
+from pyfolio import timeseries
+from pyfolio.utils import to_utc, to_series, pandas_one_point_three_or_less
 
 import gzip
 
@@ -133,16 +133,20 @@ class TestDrawdown(TestCase):
 
         peak, valley, recovery = timeseries.get_max_drawdown(rets)
         # Need to use isnull because the result can be NaN, NaT, etc.
-        self.assertTrue(pd.isnull(peak)) if expected_peak is None else self.assertEqual(
-            peak, expected_peak
+        (
+            self.assertTrue(pd.isnull(peak))
+            if expected_peak is None
+            else self.assertEqual(peak, expected_peak)
         )
-        self.assertTrue(
-            pd.isnull(valley)
-        ) if expected_valley is None else self.assertEqual(valley, expected_valley)
-        self.assertTrue(
-            pd.isnull(recovery)
-        ) if expected_recovery is None else self.assertEqual(
-            recovery, expected_recovery
+        (
+            self.assertTrue(pd.isnull(valley))
+            if expected_valley is None
+            else self.assertEqual(valley, expected_valley)
+        )
+        (
+            self.assertTrue(pd.isnull(recovery))
+            if expected_recovery is None
+            else self.assertEqual(recovery, expected_recovery)
         )
 
     @parameterized.expand(
@@ -174,25 +178,25 @@ class TestDrawdown(TestCase):
         rets = px.pct_change().iloc[1:]
 
         drawdowns = timeseries.gen_drawdown_table(rets, top=1)
-        self.assertTrue(
-            pd.isnull(drawdowns.loc[0, "Peak date"])
-        ) if expected_peak is None else self.assertEqual(
-            drawdowns.loc[0, "Peak date"], expected_peak
+        (
+            self.assertTrue(pd.isnull(drawdowns.loc[0, "Peak date"]))
+            if expected_peak is None
+            else self.assertEqual(drawdowns.loc[0, "Peak date"], expected_peak)
         )
-        self.assertTrue(
-            pd.isnull(drawdowns.loc[0, "Valley date"])
-        ) if expected_valley is None else self.assertEqual(
-            drawdowns.loc[0, "Valley date"], expected_valley
+        (
+            self.assertTrue(pd.isnull(drawdowns.loc[0, "Valley date"]))
+            if expected_valley is None
+            else self.assertEqual(drawdowns.loc[0, "Valley date"], expected_valley)
         )
-        self.assertTrue(
-            pd.isnull(drawdowns.loc[0, "Recovery date"])
-        ) if expected_recovery is None else self.assertEqual(
-            drawdowns.loc[0, "Recovery date"], expected_recovery
+        (
+            self.assertTrue(pd.isnull(drawdowns.loc[0, "Recovery date"]))
+            if expected_recovery is None
+            else self.assertEqual(drawdowns.loc[0, "Recovery date"], expected_recovery)
         )
-        self.assertTrue(
-            pd.isnull(drawdowns.loc[0, "Duration"])
-        ) if expected_duration is None else self.assertEqual(
-            drawdowns.loc[0, "Duration"], expected_duration
+        (
+            self.assertTrue(pd.isnull(drawdowns.loc[0, "Duration"]))
+            if expected_duration is None
+            else self.assertEqual(drawdowns.loc[0, "Duration"], expected_duration)
         )
 
     def test_drawdown_overlaps(self):
@@ -293,7 +297,7 @@ class TestStats(TestCase):
             )
         ]
     )
-    @skipIf(pandas_one_point_one_or_less, "pandas<1.2 returns np.inf not np.nan")
+    @skipIf(pandas_one_point_three_or_less, "pandas<=1.3 returns np.inf not np.nan")
     def test_sharpe_2(self, returns, rolling_sharpe_window, expected):
         np.testing.assert_array_almost_equal(
             timeseries.rolling_sharpe(returns, rolling_sharpe_window).to_numpy(),
