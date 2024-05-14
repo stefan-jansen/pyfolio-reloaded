@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    name: Unit Tests for ${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

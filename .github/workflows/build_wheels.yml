@@ -3,11 +3,12 @@ name: PyPI
 on:
   workflow_dispatch:
     inputs:
-      publish_to_pypi:
-        description: 'Publish to PyPI?'
+      target:
+        type: choice
+        description: 'Package Index'
         required: true
-        type: string
-        default: 'false'
+        default: 'PYPI'
+        options: [ 'TESTPYPI', 'PYPI' ]
 
 jobs:
   dist:
@@ -23,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: '0.9.7'
+          ref: 0.9.7
 
 
       - name: Set up Python ${{ matrix.python-version }}
@@ -52,16 +53,16 @@ jobs:
           path: dist
 
       - name: publish to testpypi
+        if: ${{ github.event.inputs.target  == 'TESTPYPI' }}
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: ${{ inputs.publish_to_pypi == 'false' }}
         with:
           user: __token__
           password: ${{ secrets.TESTPYPI_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
 
       - name: publish to pypi
+        if: ${{ github.event.inputs.target  == 'PYPI' }}
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: ${{ inputs.publish_to_pypi == 'true' }}
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
