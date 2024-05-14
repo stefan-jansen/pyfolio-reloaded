@@ -1377,7 +1377,7 @@ def plot_return_quantiles(returns, live_start_date=None, ax=None, **kwargs):
     is_weekly = ep.aggregate_returns(is_returns, "weekly")
     is_monthly = ep.aggregate_returns(is_returns, "monthly")
     sns.boxplot(
-        data=[is_returns, is_weekly, is_monthly],
+        data=[is_returns.values, is_weekly.values, is_monthly.values],
         palette=["#4c72B0", "#55A868", "#CCB974"],
         ax=ax,
         **kwargs,

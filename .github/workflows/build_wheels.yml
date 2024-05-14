@@ -6,8 +6,8 @@ on:
       publish_to_pypi:
         description: 'Publish to PyPI?'
         required: true
-        type: boolean
-        default: false
+        type: string
+        default: 'false'
 
 jobs:
   dist:
@@ -23,6 +23,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: '0.9.7'
+
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -51,7 +53,7 @@ jobs:
 
       - name: publish to testpypi
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: ${{ inputs.publish_to_pypi == false }}
+        if: ${{ inputs.publish_to_pypi == 'false' }}
         with:
           user: __token__
           password: ${{ secrets.TESTPYPI_TOKEN }}
@@ -59,7 +61,7 @@ jobs:
 
       - name: publish to pypi
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: ${{ inputs.publish_to_pypi == true }}
+        if: ${{ inputs.publish_to_pypi == 'true' }}
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
