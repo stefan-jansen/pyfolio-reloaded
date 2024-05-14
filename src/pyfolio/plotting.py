@@ -811,7 +811,7 @@ def plot_rolling_returns(
     ax.yaxis.set_major_formatter(FuncFormatter(y_axis_formatter))
 
     if factor_returns is not None:
-        cum_factor_returns = ep.cum_returns(factor_returns[cum_rets.index], 1.0)
+        cum_factor_returns = ep.cum_returns(factor_returns.loc[cum_rets.index], 1.0)
         cum_factor_returns.plot(
             lw=2,
             color="gray",
