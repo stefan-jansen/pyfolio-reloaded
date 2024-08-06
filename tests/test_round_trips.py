@@ -19,6 +19,7 @@ from pyfolio.round_trips import (
     extract_round_trips,
     add_closing_transactions,
     _groupby_consecutive,
+    gen_round_trip_stats
 )
 
 
@@ -255,6 +256,9 @@ class RoundTripTestCase(TestCase):
             round_trips.sort_index(axis="columns"),
             expected.sort_index(axis="columns"),
         )
+
+        #would be better to test something specific but just running them is an improvement
+        gen_round_trip_stats(round_trips)
 
     def test_add_closing_trades(self):
         dates = date_range(start="2015-01-01", periods=20)
