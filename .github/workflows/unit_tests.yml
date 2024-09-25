@@ -2,6 +2,8 @@ name: Tests
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * 6"
   push:
     branches:
       - main
