@@ -9,6 +9,11 @@ on:
         required: true
         default: 'PYPI'
         options: [ 'TESTPYPI', 'PYPI' ]
+      version:
+        type: string
+        description: 'Version tag'
+        required: true
+        default: '0.9.8'
 
 jobs:
   dist:
@@ -24,7 +29,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: 0.9.7
+          ref: ${{ github.event.inputs.version }}
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
