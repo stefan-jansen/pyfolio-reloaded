@@ -24,6 +24,7 @@ classifiers = [
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
     'Operating System :: OS Independent',
     'Intended Audience :: Science/Research',
     'Topic :: Office/Business :: Financial :: Investment',
@@ -34,7 +35,7 @@ dependencies = [
     # following pandas
     "numpy>=1.23.5; python_version<'3.12'",
     "numpy>=1.26.0; python_version>='3.12'",
-    "pandas >=1.3.0,<3.0",
+    "pandas >=1.5.0,<3.0",
     "ipython >=3.2.3",
     "matplotlib >=1.4.0",
     "pytz >=2014.10",
@@ -139,14 +140,13 @@ legacy_tox_ini = """
 [tox]
 
 envlist =
-    py39-pandas{13,14,15}-numpy1
-    py310-pandas{13,14,15,20,21,22}-numpy1
-    py311-pandas{13,14,15,20,21,22}-numpy1
-    py312-pandas{13,14,15,20,21,22}-numpy1
-    py39-pandas222-numpy2
-    py310-pandas222-numpy2
-    py311-pandas222-numpy2
-    py312-pandas222-numpy2
+    py310-pandas{15,20,21,22}-numpy1
+    py311-pandas{15,20,21,22}-numpy1
+    py312-pandas{15,20,21,22}-numpy1
+    py310-pandas{15,20,21,22}-numpy2{0,1,2}
+    py311-pandas{15,20,21,22}-numpy2{0,1,2}
+    py312-pandas{15,20,21,22}-numpy2{0,1,2}
+    py313-pandas{20,21,22}-numpy2{0,1,2}
 
 isolated_build = True
 skip_missing_interpreters = True
@@ -154,10 +154,10 @@ minversion = 3.23.0
 
 [gh-actions]
 python =
-    3.9: py39
     3.10: py310
     3.11: py311
     3.12: py312
+    3.13: py313
 
 [testenv]
 usedevelop = True
@@ -167,15 +167,15 @@ setenv =
 changedir = tmp
 extras = test
 deps =
-    pandas13: pandas>=1.3.0,<1.4
-    pandas14: pandas>=1.4.0,<1.5
     pandas15: pandas>=1.5.0,<1.6
     pandas20: pandas>=2.0,<2.1
     pandas21: pandas>=2.1,<2.2
     pandas22: pandas>=2.2,<2.3
     pandas222: pandas>=2.2.2,<2.3
     numpy1: numpy>=1.23.5,<2.0
-    numpy2: numpy>=2.0,<2.1
+    numpy20: numpy>=2.0,<2.1
+    numpy21: numpy>=2.1,<2.2
+    numpy22: numpy>=2.2,<2.3
 
 
 commands =
