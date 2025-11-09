@@ -12,8 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import calendar
 import datetime
+import calendar
 from collections import OrderedDict
 from functools import wraps
 
@@ -25,11 +25,11 @@ import numpy as np
 import pandas as pd
 import pytz
 import scipy as sp
-import seaborn as sns
 from matplotlib import figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.ticker import FuncFormatter
 
+import seaborn as sns
 from . import capacity
 from . import pos
 from . import timeseries
@@ -444,10 +444,7 @@ def plot_drawdown_periods(returns, top=10, ax=None, **kwargs):
 
     lim = ax.get_ylim()
     colors = sns.cubehelix_palette(len(df_drawdowns))[::-1]
-    # print(df_drawdowns)
-    for i, (peak, recovery) in (
-        df_drawdowns[["Peak date", "Recovery date"]].dropna(how="all").iterrows()
-    ):
+    for i, (peak, recovery) in df_drawdowns[["Peak date", "Recovery date"]].iterrows():
         if pd.isnull(recovery):
             recovery = returns.index[-1]
         ax.fill_between((peak, recovery), lim[0], lim[1], alpha=0.4, color=colors[i])
@@ -551,7 +548,6 @@ def show_perf_stats(
     live_start_date=None,
     bootstrap=False,
     header_rows=None,
-    return_df=False,
 ):
     """
     Prints some performance metrics of the strategy.
@@ -662,7 +658,9 @@ def show_perf_stats(
     else:
         if len(returns.index) > 0:
             date_rows["Total months"] = int(len(returns) / APPROX_BDAYS_PER_MONTH)
-        perf_stats = pd.DataFrame(perf_stats_all, columns=["Backtest"])
+        # Use returns.name if available, otherwise default to "Backtest"
+        label = returns.name if returns.name is not None and returns.name != "" else "Backtest"
+        perf_stats = pd.DataFrame(perf_stats_all, columns=[label])
 
     for column in perf_stats.columns:
         for stat, value in perf_stats[column].items():
@@ -674,8 +672,6 @@ def show_perf_stats(
         header_rows = OrderedDict(header_rows)
         header_rows.update(date_rows)
 
-    if return_df:
-        return perf_stats
     utils.print_table(
         perf_stats,
         float_format="{0:.2f}".format,
@@ -795,6 +791,9 @@ def plot_rolling_returns(
     if ax is None:
         ax = plt.gca()
 
+    # Save original returns name before any modifications
+    returns_label = returns.name if returns.name is not None and returns.name != "" else "Backtest"
+
     ax.set_xlabel("")
     ax.set_ylabel("Cumulative returns")
     ax.set_yscale("log" if logy else "linear")
@@ -811,7 +810,7 @@ def plot_rolling_returns(
     ax.yaxis.set_major_formatter(FuncFormatter(y_axis_formatter))
 
     if factor_returns is not None:
-        cum_factor_returns = ep.cum_returns(factor_returns.loc[cum_rets.index], 1.0)
+        cum_factor_returns = ep.cum_returns(factor_returns[cum_rets.index], 1.0)
         cum_factor_returns.plot(
             lw=2,
             color="gray",
@@ -829,8 +828,13 @@ def plot_rolling_returns(
         is_cum_returns = cum_rets
         oos_cum_returns = pd.Series([], dtype="float64")
 
+    # Clear any existing name to ensure our label is used
+    is_cum_returns = is_cum_returns.copy()
+    is_cum_returns.name = None
+    
+    # Use saved returns_label (from original returns.name)
     is_cum_returns.plot(
-        lw=2, color="forestgreen", alpha=0.6, label="Backtest", ax=ax, **kwargs
+        lw=2, color="forestgreen", alpha=0.6, label=returns_label, ax=ax, **kwargs
     )
 
     if len(oos_cum_returns) > 0:
@@ -1377,7 +1381,7 @@ def plot_return_quantiles(returns, live_start_date=None, ax=None, **kwargs):
     is_weekly = ep.aggregate_returns(is_returns, "weekly")
     is_monthly = ep.aggregate_returns(is_returns, "monthly")
     sns.boxplot(
-        data=[is_returns.values, is_weekly.values, is_monthly.values],
+        data=[is_returns, is_weekly, is_monthly],
         palette=["#4c72B0", "#55A868", "#CCB974"],
         ax=ax,
         **kwargs,
