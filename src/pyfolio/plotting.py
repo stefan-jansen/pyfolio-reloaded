@@ -606,6 +606,11 @@ def show_perf_stats(
 
     date_rows = OrderedDict()
     if len(returns.index) > 0:
+        if not isinstance(returns.index, pd.DatetimeIndex):
+            raise TypeError(
+                "returns.index must be a pd.DatetimeIndex. "
+                "Consider converting with returns.index = pd.to_datetime(returns.index)"
+            )
         date_rows["Start date"] = returns.index[0].strftime("%Y-%m-%d")
         date_rows["End date"] = returns.index[-1].strftime("%Y-%m-%d")
 
