@@ -15,6 +15,18 @@ DECIMAL_PLACES = 8
 
 
 class TestDrawdown(TestCase):
+    @parameterized.expand([(0,), (1,), (10,)])
+    def test_empty_top_drawdowns(self, top):
+        returns = pd.Series(dtype=float, index=pd.DatetimeIndex([]))
+        self.assertEqual(timeseries.get_top_drawdowns(returns, top=top), [])
+        self.assertTrue(returns.empty)
+
+    def test_empty_drawdown_table(self):
+        returns = pd.Series(dtype=float, index=pd.DatetimeIndex([]))
+        result = timeseries.gen_drawdown_table(returns, top=3)
+        self.assertEqual(result.shape, (3, 5))
+        self.assertTrue(result.isna().all().all())
+
     drawdown_list = np.array([100, 90, 75]) / 10.0
     dt = pd.date_range("2000-1-3", periods=3, freq="D")
 
