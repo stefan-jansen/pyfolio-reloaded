@@ -945,7 +945,11 @@ def get_top_drawdowns(returns, top=10):
     -------
     drawdowns : list
         List of drawdown peaks, valleys, and recoveries. See get_max_drawdown.
+        Returns an empty list when returns is empty.
     """
+
+    if returns.empty:
+        return []
 
     returns = returns.copy()
     df_cum = ep.cum_returns(returns, 1.0)
