@@ -664,6 +664,12 @@ def show_perf_stats(
             date_rows["Total months"] = int(len(returns) / APPROX_BDAYS_PER_MONTH)
         perf_stats = pd.DataFrame(perf_stats_all, columns=["Backtest"])
 
+    # perf_stats is about to hold a mix of numeric and formatted-percent
+    # strings in the same numeric-dtype column; cast to object up front
+    # rather than let the .loc assignment below silently trigger pandas'
+    # incompatible-dtype upcast, which is deprecated and becomes an error
+    # in a future pandas version.
+    perf_stats = perf_stats.astype(object)
     for column in perf_stats.columns:
         for stat, value in perf_stats[column].items():
             if stat in STAT_FUNCS_PCT:
@@ -847,7 +853,7 @@ def plot_rolling_returns(
                 is_returns,
                 len(oos_cum_returns),
                 cone_std=cone_std,
-                starting_value=is_cum_returns[-1],
+                starting_value=is_cum_returns.iloc[-1],
             )
 
             cone_bounds = cone_bounds.set_index(oos_cum_returns.index)
