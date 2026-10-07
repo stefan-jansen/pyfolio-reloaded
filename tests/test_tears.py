@@ -233,3 +233,15 @@ class LiveStartTurnoverTestCase(TestCase):
         # and the first of them trades $100 against a $100 book, with
         # day-0 gross book halved, so turnover averages 2/3.
         self.assertEqual(stats.loc["Daily turnover", "Out-of-sample"], "66.667%")
+
+    def test_naive_index_accepts_live_start_date(self):
+        dates = pd.date_range("2015-01-01", periods=4, freq="D")
+        returns = pd.Series([0.01, 0.0, -0.01, 0.02], index=dates)
+
+        stats = show_perf_stats(
+            returns, live_start_date=dates[2], return_df=True
+        )
+
+        # First two days compound to 1%. The last two compound to 0.98%.
+        self.assertEqual(stats.loc["Cumulative returns", "In-sample"], "1.0%")
+        self.assertEqual(stats.loc["Cumulative returns", "Out-of-sample"], "0.98%")

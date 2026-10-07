@@ -426,6 +426,21 @@ def clip_returns_to_benchmark(rets, benchmark_rets):
     return clipped_rets
 
 
+def to_comparable_timestamp(dt, index):
+    """Return ``dt`` as a timestamp that can be compared with ``index``.
+
+    Live-start dates are localized to UTC. Comparing that value with a
+    tz-naive DatetimeIndex raises TypeError, so the in-sample / live
+    split never runs for naive return series.
+    """
+
+    ts = empyrical.utils.get_utc_timestamp(dt)
+    index_tz = getattr(index, "tz", None)
+    if index_tz is None:
+        return ts.tz_localize(None)
+    return ts.tz_convert(index_tz)
+
+
 def to_utc(df):
     """
     For use in tests; applied UTC timestamp to DataFrame.
