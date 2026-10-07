@@ -386,6 +386,42 @@ class TestBootstrap(TestCase):
         )
 
 
+class TestRollingRegression(TestCase):
+    def test_nan_threshold_uses_fraction_not_boolean_all(self):
+        dates = pd.bdate_range("2020-01-01", periods=30)
+        rng = np.random.default_rng(0)
+        factor_returns = pd.DataFrame(
+            rng.normal(size=(len(dates), 2)), index=dates, columns=["M", "S"]
+        )
+        # One NaN in each factor, so every early window is under a 10%
+        # threshold but neither column is completely clean.
+        factor_returns.iloc[0, 0] = np.nan
+        factor_returns.iloc[1, 1] = np.nan
+        returns = pd.Series(
+            0.5 * factor_returns["M"].fillna(0)
+            + 0.25 * factor_returns["S"].fillna(0),
+            index=dates,
+        )
+
+        fitted = timeseries.rolling_regression(
+            returns, factor_returns, rolling_window=10, nan_threshold=0.1
+        )
+        # Window ending on dates[10] contains both NaNs (about 9% each).
+        self.assertTrue(np.isfinite(fitted.loc[dates[10], "alpha"]))
+
+        dirty = factor_returns.copy()
+        dirty.iloc[:6, 1] = np.nan
+        dirty_returns = pd.Series(
+            0.5 * dirty["M"] + 0.25 * dirty["S"].fillna(0), index=dates
+        )
+        skipped = timeseries.rolling_regression(
+            dirty_returns, dirty, rolling_window=10, nan_threshold=0.1
+        )
+        # Factor S is more than 10% missing in that window, and M is not,
+        # so the regression must be skipped rather than fit on the rest.
+        self.assertTrue(np.isnan(skipped.loc[dates[10], "alpha"]))
+
+
 class TestSortinoPeriod(TestCase):
     def test_sortino_ratio_uses_period_for_annualization(self):
         monthly = pd.Series(

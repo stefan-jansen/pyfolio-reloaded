@@ -592,7 +592,11 @@ def rolling_regression(
         returns_period = ret_no_na[beg:end]
         factor_returns_period = factor_returns.loc[returns_period.index]
 
-        if np.all(factor_returns_period.isnull().mean()) < nan_threshold:
+        # Skip when any factor exceeds the NaN fraction. The comparison has
+        # to be inside np.all; np.all(fractions) < threshold treats every
+        # non-zero fraction as True and then compares that boolean.
+        nan_fraction = factor_returns_period.isnull().mean()
+        if np.all(nan_fraction <= nan_threshold):
             factor_returns_period_dnan = factor_returns_period.dropna()
             reg = linear_model.LinearRegression(fit_intercept=True).fit(
                 factor_returns_period_dnan,
