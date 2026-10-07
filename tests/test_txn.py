@@ -61,6 +61,41 @@ class TransactionsTestCase(TestCase):
 
         assert_series_equal(result, expected)
 
+    def test_get_turnover_aligns_mixed_timezones(self):
+        dates = pd.date_range(start="2015-01-01", freq="D", periods=2)
+        positions = pd.DataFrame(
+            [[100.0, 0.0], [100.0, 0.0]], columns=["A", "cash"], index=dates
+        )
+        transactions = pd.DataFrame(
+            data=[[1, 10, 10.0, "A"]],
+            columns=["sid", "amount", "price", "symbol"],
+            index=[dates[0] + pd.Timedelta(hours=11)],
+        )
+        expected = get_turnover(positions, transactions)
+
+        positions_utc = positions.copy()
+        positions_utc.index = dates.tz_localize("UTC")
+        transactions_eastern = transactions.copy()
+        transactions_eastern.index = transactions.index.tz_localize("US/Eastern")
+
+        result = get_turnover(positions_utc, transactions_eastern)
+        assert_series_equal(result.tz_localize(None), expected, check_freq=False)
+
+        # Naive positions against UTC trades used to raise on the join.
+        transactions_utc = transactions.copy()
+        transactions_utc.index = transactions.index.tz_localize("UTC")
+        mixed = get_turnover(positions, transactions_utc)
+        assert_series_equal(mixed, expected, check_freq=False)
+
+        returns = pd.Series([0.0, 0.0], index=positions_utc.index)
+        adjusted = adjust_returns_for_slippage(
+            returns, positions_utc, transactions_eastern, 10
+        )
+        # $100 traded, 10 bps, against a $100 book, on the first session.
+        assert_series_equal(
+            adjusted, pd.Series([-0.001, 0.0], index=positions_utc.index)
+        )
+
     def test_adjust_returns_for_slippage(self):
         dates = pd.date_range(start="2015-01-01", freq="D", periods=20)
 

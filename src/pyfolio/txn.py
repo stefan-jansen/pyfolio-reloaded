@@ -80,7 +80,37 @@ def make_transaction_frame(transactions):
     return df
 
 
-def get_txn_vol(transactions):
+def _same_tz(left, right):
+    if left is None or right is None:
+        return left is None and right is None
+    return str(left) == str(right)
+
+
+def _normalize_index_to(index, reference):
+    """Normalize ``index`` onto the calendar of ``reference``.
+
+    Matching timezones are only floored to midnight. A naive index and
+    an aware one, or two different zones, are converted onto
+    ``reference`` first so session dates still join. Leaving them
+    unmatched makes turnover division raise, or fill the miss with 0.
+    """
+
+    index = pd.DatetimeIndex(index)
+    reference = pd.DatetimeIndex(reference)
+    if _same_tz(index.tz, reference.tz):
+        return index.normalize()
+    if reference.tz is None:
+        if index.tz is not None:
+            index = index.tz_localize(None)
+        return index.normalize()
+    if index.tz is None:
+        index = index.tz_localize(reference.tz)
+    else:
+        index = index.tz_convert(reference.tz)
+    return index.normalize()
+
+
+def get_txn_vol(transactions, normalize_to=None):
     """
     Extract daily transaction data from set of transaction objects.
 
@@ -90,6 +120,9 @@ def get_txn_vol(transactions):
         Time series containing one row per symbol (and potentially
         duplicate datetime indices) and columns for amount and
         price.
+    normalize_to : pd.Index, optional
+        Index whose timezone should be used when bucketing trades into
+        days. When omitted, trades are normalized in their own timezone.
 
     Returns
     -------
@@ -99,7 +132,10 @@ def get_txn_vol(transactions):
     """
 
     txn_norm = transactions.copy()
-    txn_norm.index = txn_norm.index.normalize()
+    if normalize_to is None:
+        txn_norm.index = pd.DatetimeIndex(txn_norm.index).normalize()
+    else:
+        txn_norm.index = _normalize_index_to(txn_norm.index, normalize_to)
     amounts = txn_norm.amount.abs()
     prices = txn_norm.price
     values = amounts * prices
@@ -137,7 +173,9 @@ def adjust_returns_for_slippage(returns, positions, transactions, slippage_bps):
     slippage = 0.0001 * slippage_bps
     portfolio_value = positions.sum(axis=1)
     pnl = portfolio_value * returns
-    traded_value = get_txn_vol(transactions).txn_volume
+    traded_value = get_txn_vol(
+        transactions, normalize_to=returns.index
+    ).txn_volume
     slippage_dollars = traded_value * slippage
     adjusted_pnl = pnl.add(-slippage_dollars, fill_value=0)
     # adjusted_pnl / pnl * returns is the same ratio, but it is NaN on
@@ -180,7 +218,7 @@ def get_turnover(positions, transactions, denominator="AGB"):
         timeseries of portfolio turnover rates.
     """
 
-    txn_vol = get_txn_vol(transactions)
+    txn_vol = get_txn_vol(transactions, normalize_to=positions.index)
     traded_value = txn_vol.txn_volume
 
     if denominator == "AGB":
