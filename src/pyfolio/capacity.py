@@ -95,7 +95,10 @@ def days_to_liquidate_positions(
     positions_alloc = pos.get_percent_alloc(positions)
     positions_alloc = positions_alloc.drop("cash", axis=1)
 
-    days_to_liquidate = (positions_alloc * capital_base) / (
+    # Liquidating a short consumes the same dollar volume as a long of
+    # the same size. Signed allocation made those days negative, so a
+    # large short never showed up as a liquidation constraint.
+    days_to_liquidate = (positions_alloc.abs() * capital_base) / (
         max_bar_consumption * roll_mean_dv
     )
 

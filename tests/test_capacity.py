@@ -60,6 +60,27 @@ class CapacityTestCase(TestCase):
         )
         assert_frame_equal(dtlp, expected)
 
+    def test_short_positions_take_positive_days_to_liquidate(self):
+        dates = self.dates
+        positions = pd.DataFrame(
+            [[-3.0, 4.0], [-1.0, 2.0], [0.0, 1.0]],
+            columns=["A", "cash"],
+            index=dates,
+        )
+        # Reuse A's market data and ignore B by not holding it.
+        market_data = self.market_data[["A"]]
+        dtlp = days_to_liquidate_positions(
+            positions,
+            market_data,
+            max_bar_consumption=1,
+            capital_base=1e6,
+            mean_volume_window=1,
+        )
+        # On 2015-01-02 the book is A=-1, cash=2, so the short is 100% of
+        # NAV. Prior dollar volume is 1e6 and the bar limit is 100%, so
+        # liquidation takes one day. The signed allocation would be -1.
+        self.assertAlmostEqual(dtlp.loc[dates[1], "A"], 1.0)
+
     def test_get_max_days_to_liquidate_by_ticker(self):
         mdtl = get_max_days_to_liquidate_by_ticker(
             self.positions,
