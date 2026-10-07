@@ -85,3 +85,21 @@ class TransactionsTestCase(TestCase):
         )
 
         assert_series_equal(result, expected)
+
+    def test_slippage_on_zero_return_day_is_not_nan(self):
+        dates = pd.date_range(start="2015-01-01", freq="D", periods=2)
+        positions = pd.DataFrame(
+            [[100.0, 0.0], [100.0, 0.0]], columns=["A", "cash"], index=dates
+        )
+        # Day 0 is flat with no trade. Day 1 is flat but trades $100.
+        transactions = pd.DataFrame(
+            data=[[1, 10, 10.0, "A"]],
+            columns=["sid", "amount", "price", "symbol"],
+            index=[dates[1]],
+        )
+        returns = pd.Series([0.0, 0.0], index=dates)
+
+        result = adjust_returns_for_slippage(returns, positions, transactions, 10)
+
+        # 10 bps on $100 traded against a $100 book.
+        assert_series_equal(result, pd.Series([0.0, -0.001], index=dates))

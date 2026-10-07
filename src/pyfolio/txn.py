@@ -140,9 +140,12 @@ def adjust_returns_for_slippage(returns, positions, transactions, slippage_bps):
     traded_value = get_txn_vol(transactions).txn_volume
     slippage_dollars = traded_value * slippage
     adjusted_pnl = pnl.add(-slippage_dollars, fill_value=0)
-    adjusted_returns = returns * adjusted_pnl / pnl
-
-    return adjusted_returns
+    # adjusted_pnl / pnl * returns is the same ratio, but it is NaN on
+    # days with zero PnL (including flat days with no trades).
+    adjusted_returns = (adjusted_pnl / portfolio_value).reindex(returns.index)
+    return pd.Series(
+        adjusted_returns.to_numpy(), index=returns.index, name=returns.name
+    )
 
 
 def get_turnover(positions, transactions, denominator="AGB"):
