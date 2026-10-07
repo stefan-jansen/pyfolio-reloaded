@@ -386,6 +386,34 @@ class TestBootstrap(TestCase):
         )
 
 
+class TestSortinoPeriod(TestCase):
+    def test_sortino_ratio_uses_period_for_annualization(self):
+        monthly = pd.Series(
+            [0.02, -0.01, 0.03, 0.01, -0.02] * 6,
+            index=pd.date_range("2018-01-31", periods=30, freq="M"),
+        )
+        weekly = pd.Series(
+            [0.01, -0.005, 0.015, -0.002] * 10,
+            index=pd.date_range("2018-01-07", periods=40, freq="W"),
+        )
+
+        import empyrical as ep
+
+        assert_almost_equal(
+            timeseries.sortino_ratio(monthly, period="monthly"),
+            ep.sortino_ratio(monthly, period="monthly"),
+        )
+        assert_almost_equal(
+            timeseries.sortino_ratio(weekly, period="weekly"),
+            ep.sortino_ratio(weekly, period="weekly"),
+        )
+        # Guard against regressing to the daily annualization factor.
+        self.assertNotAlmostEqual(
+            timeseries.sortino_ratio(monthly, period="monthly"),
+            ep.sortino_ratio(monthly, period="daily"),
+        )
+
+
 class TestGrossLev(TestCase):
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__))
