@@ -21,6 +21,9 @@ from pyfolio.tears import (
     create_round_trip_tear_sheet,
     create_interesting_times_tear_sheet,
 )
+import pandas as pd
+
+from pyfolio.plotting import show_perf_stats
 from pyfolio.utils import to_utc, to_series
 
 
@@ -203,3 +206,30 @@ class PositionsTestCase(TestCase):
         create_interesting_times_tear_sheet(
             self.test_returns, self.test_returns, **kwargs
         )
+
+
+class LiveStartTurnoverTestCase(TestCase):
+    def test_trade_on_live_start_is_out_of_sample(self):
+        dates = pd.date_range("2015-01-01", periods=4, freq="D", tz="UTC")
+        returns = pd.Series(0.0, index=dates)
+        positions = pd.DataFrame(
+            {"A": 100.0, "cash": 0.0}, index=dates
+        )
+        transactions = pd.DataFrame(
+            {"amount": [10.0], "price": [10.0], "symbol": ["A"]},
+            index=[dates[1]],
+        )
+
+        stats = show_perf_stats(
+            returns,
+            positions=positions,
+            transactions=transactions,
+            live_start_date=dates[1],
+            return_df=True,
+        )
+
+        # The single trade is stamped exactly on the live start. It has
+        # to count in the out-of-sample book. That slice is three days
+        # and the first of them trades $100 against a $100 book, with
+        # day-0 gross book halved, so turnover averages 2/3.
+        self.assertEqual(stats.loc["Daily turnover", "Out-of-sample"], "66.667%")
