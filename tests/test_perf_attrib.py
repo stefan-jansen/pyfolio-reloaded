@@ -107,6 +107,20 @@ def mock_transactions_from_positions(positions):
 
 
 class PerfAttribTestCase(unittest.TestCase):
+    def test_cash_only_positions_raise_value_error(self):
+        dts = pd.date_range("2017-01-01", periods=2)
+        positions = pd.DataFrame({"cash": [100.0, 100.0]}, index=dts)
+        returns = pd.Series([0.0, 0.0], index=dts)
+        factor_returns = pd.DataFrame({"risk_factor1": [0.01, -0.01]}, index=dts)
+        factor_loadings = pd.DataFrame(
+            {"risk_factor1": [1.0]},
+            index=pd.MultiIndex.from_tuples(
+                [(dts[0], "AAPL")], names=["dt", "ticker"]
+            ),
+        )
+        with self.assertRaisesRegex(ValueError, "No factor loadings"):
+            perf_attrib(returns, positions, factor_returns, factor_loadings)
+
     def test_perf_attrib_simple(self):
 
         start_date = "2017-01-01"
