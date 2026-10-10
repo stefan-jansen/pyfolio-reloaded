@@ -52,7 +52,9 @@ def perf_attrib(
     ----------
     returns : pd.Series
         Returns for each day in the date range.
-        - Example:
+
+        Example::
+
             2017-01-01   -0.017098
             2017-01-02    0.002683
             2017-01-03   -0.008669
@@ -61,7 +63,9 @@ def perf_attrib(
         Daily holdings (in dollars or percentages), indexed by date.
         Will be converted to percentages if positions are in dollars.
         Short positions show up as cash in the 'cash' column.
-        - Examples:
+
+        Examples::
+
                         AAPL  TLT  XOM  cash
             2017-01-01    34   58   10     0
             2017-01-02    22   77   18     0
@@ -74,7 +78,9 @@ def perf_attrib(
 
     factor_returns : pd.DataFrame
         Returns by factor, with date as index and factors as columns
-        - Example:
+
+        Example::
+
                         momentum  reversal
             2017-01-01  0.002779 -0.005453
             2017-01-02  0.001096  0.010290
@@ -82,7 +88,9 @@ def perf_attrib(
     factor_loadings : pd.DataFrame
         Factor loadings for all days in the date range, with date and ticker as
         index, and factors as columns.
-        - Example:
+
+        Example::
+
                                momentum  reversal
             dt         ticker
             2017-01-01 AAPL   -1.592914  0.852830
@@ -101,7 +109,9 @@ def perf_attrib(
         - One row per trade.
         - Trades on different names that occur at the
           same time will have identical indicies.
-        - Example:
+
+        Example::
+
             index                  amount   price    symbol
             2004-01-09 12:18:01    483      324.12   'AAPL'
             2004-01-09 12:18:01    122      83.10    'MSFT'
@@ -117,7 +127,9 @@ def perf_attrib(
 
     risk_exposures_portfolio : pd.DataFrame
         df indexed by datetime, with factors as columns
-        - Example:
+
+        Example::
+
                         momentum  reversal
             dt
             2017-01-01 -0.238655  0.077123
@@ -126,7 +138,9 @@ def perf_attrib(
     perf_attribution : pd.DataFrame
         df with factors, common returns, and specific returns as columns,
         and datetimes as index
-        - Example:
+
+        Example::
+
                         momentum  reversal  common_returns  specific_returns
             dt
             2017-01-01  0.249087  0.935925        1.185012          1.185012
@@ -162,7 +176,9 @@ def compute_exposures(
     positions: pd.DataFrame or pd.Series
         Daily holdings (in dollars or percentages), indexed by date, OR
         a series of holdings indexed by date and ticker.
-        - Examples:
+
+        Examples::
+
                         AAPL  TLT  XOM  cash
             2017-01-01    34   58   10     0
             2017-01-02    22   77   18     0
@@ -184,7 +200,9 @@ def compute_exposures(
     factor_loadings : pd.DataFrame
         Factor loadings for all days in the date range, with date and ticker as
         index, and factors as columns.
-        - Example:
+
+        Example::
+
                                momentum  reversal
             dt         ticker
             2017-01-01 AAPL   -1.592914  0.852830
@@ -205,7 +223,9 @@ def compute_exposures(
     -------
     risk_exposures_portfolio : pd.DataFrame
         df indexed by datetime, with factors as columns.
-        - Example:
+
+        Example::
+
                         momentum  reversal
             dt
             2017-01-01 -0.238655  0.077123
@@ -338,7 +358,9 @@ def plot_returns(perf_attrib_data, cost=None, ax=None):
         df with factors, common returns, and specific returns as columns,
         and datetimes as index. Assumes the `total_returns` column is NOT
         cost adjusted.
-        - Example:
+
+        Example::
+
                         momentum  reversal  common_returns  specific_returns
             dt
             2017-01-01  0.249087  0.935925        1.185012          1.185012
@@ -435,7 +457,9 @@ def plot_factor_contribution_to_perf(
     perf_attrib_data : pd.DataFrame
         df with factors, common returns, and specific returns as columns,
         and datetimes as index
-        - Example:
+
+        Example::
+
                         momentum  reversal  common_returns  specific_returns
             dt
             2017-01-01  0.249087  0.935925        1.185012          1.185012
@@ -482,7 +506,9 @@ def plot_risk_exposures(exposures, ax=None, title="Daily risk factor exposures")
     ----------
     exposures : pd.DataFrame
         df indexed by datetime, with factors as columns
-        - Example:
+
+        Example::
+
                         momentum  reversal
             dt
             2017-01-01 -0.238655  0.077123

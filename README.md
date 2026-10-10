@@ -55,7 +55,7 @@ or
 conda install -c ml4t pyfolio-reloaded
 ```
 
-#### Development
+### Development
 
 For development, you may want to use a [virtual environment](https://docs.python-guide.org/en/latest/dev/virtualenvs/) to avoid dependency conflicts between pyfolio and other Python projects you have.
 
