@@ -10,8 +10,10 @@ metadata changes do not require a separate issue. Keep unrelated repairs and for
 
 For a bug fix, provide a regression through the affected public API or user workflow. Record the
 base and fix revisions, environment, commands and results: the regression must fail because of
-the defect on the base and pass with the fix. Discuss changes to numerical definitions or
-defaults in the owning issue. Documentation changes need documentation checks, not artificial
+the defect on the base and pass with the fix. Correct verified defects even when numerical
+results change. Agree changes to intended definitions, annualization, sign conventions or
+defaults in the owning issue and document their compatibility impact. Existing output alone
+is not evidence of correctness. Documentation changes need documentation checks, not artificial
 regression tests.
 
 Use the native checks in the [test workflow](https://github.com/stefan-jansen/pyfolio-reloaded/blob/main/.github/workflows/unit_tests.yml)

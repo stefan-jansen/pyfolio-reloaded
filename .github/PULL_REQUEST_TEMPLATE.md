@@ -11,8 +11,9 @@ Describe the problem and the resulting behavior.
 
 <!-- For bugs, test the affected public API or user workflow. The regression must
      fail because of the defect on the base and pass with the fix. Do not substitute
-     source-text checks or tests of copied logic. Agree changes to intended numerical
-     definitions or defaults in the owning issue and describe their impact.
+     source-text checks or tests of copied logic. Correct verified defects even when
+     numerical results change. Agree changes to intended definitions, annualization,
+     sign conventions or defaults in the owning issue and describe their impact.
      For documentation or administrative changes, explain why bug-regression
      evidence does not apply and report the relevant checks instead. -->
 
