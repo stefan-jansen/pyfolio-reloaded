@@ -624,7 +624,7 @@ def show_perf_stats(
             positions_oos = positions[positions.index >= live_start_date]
             if transactions is not None:
                 transactions_is = transactions[(transactions.index < live_start_date)]
-                transactions_oos = transactions[(transactions.index > live_start_date)]
+                transactions_oos = transactions[(transactions.index >= live_start_date)]
 
         perf_stats_is = perf_func(
             returns_is,
