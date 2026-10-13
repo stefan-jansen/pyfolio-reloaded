@@ -42,7 +42,7 @@ dependencies = [
     "scipy >=0.14.0",
     "scikit-learn >=0.16.1",
     "seaborn >=0.7.1",
-    "empyrical-reloaded >=0.5.9",
+    "empyrical-reloaded >=0.5.11",
 ]
 
 [project.urls]
