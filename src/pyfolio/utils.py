@@ -426,6 +426,14 @@ def clip_returns_to_benchmark(rets, benchmark_rets):
     return clipped_rets
 
 
+def _comparable_live_start(dt, index):
+    """Compare the UTC live-start instant with an aware or naive return index."""
+    timestamp = empyrical.utils.get_utc_timestamp(dt)
+    if index.tz is None:
+        return timestamp.tz_localize(None)
+    return timestamp.tz_convert(index.tz)
+
+
 def to_utc(df):
     """
     For use in tests; applied UTC timestamp to DataFrame.
