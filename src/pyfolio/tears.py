@@ -524,6 +524,9 @@ def create_returns_tear_sheet(
     if benchmark_rets is not None:
         returns = utils.clip_returns_to_benchmark(returns, benchmark_rets)
 
+    if returns.empty:
+        raise ValueError("returns must contain at least one observation")
+
     plotting.show_perf_stats(
         returns,
         benchmark_rets,
