@@ -29,4 +29,4 @@ Wait for feedback on your first focused contribution before opening a large seri
 Maintainers may request focused replacements for bundled submissions.
 
 Report suspected vulnerabilities through the [shared security process](https://github.com/ml4t/ecosystem/blob/main/SECURITY.md).
-For other questions, use this repository's issues or the [community forum](https://exchange.ml4trading.io).
+For other questions, use this repository's [issues](https://github.com/stefan-jansen/pyfolio-reloaded/issues).
