@@ -13,11 +13,10 @@ maintainers = [
     { name = 'Stefan Jansen' },
     { email = 'pm@ml4trading.io' }
 ]
-license = { file = "LICENSE" }
+license = "Apache-2.0"
 
 classifiers = [
     'Development Status :: 4 - Beta',
-    'License :: OSI Approved :: Apache Software License',
     'Natural Language :: English',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3.11',
@@ -56,9 +55,8 @@ documentation = 'https://pyfolio.ml4trading.io'
 
 [build-system]
 requires = [
-    'setuptools>=54.0.0',
-    "setuptools_scm[toml]>=6.2",
-    'wheel>=0.31.0',
+    'setuptools>=77.0.3',
+    "setuptools-scm>=8.0.4",
 ]
 build-backend = 'setuptools.build_meta'
 
