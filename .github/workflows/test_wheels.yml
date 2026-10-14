@@ -28,11 +28,40 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Create a notebook checkpoint for the packaging regression
+        shell: python
+        run: |
+          from pathlib import Path
+          import shutil
+          notebook = Path("src/pyfolio/examples/round_trip_tear_sheet_example.ipynb")
+          checkpoint = notebook.parent / ".ipynb_checkpoints" / f"{notebook.stem}-checkpoint.ipynb"
+          checkpoint.parent.mkdir(exist_ok=True)
+          shutil.copyfile(notebook, checkpoint)
+
       - name: Build and check distributions
         run: |
           python -m pip install --upgrade build twine
           python -m build
           python -m twine check dist/*
+
+      - name: Verify versioned examples and exclude notebook checkpoints
+        shell: python
+        run: |
+          from pathlib import Path
+          import subprocess
+          import tarfile
+          import zipfile
+          examples = subprocess.check_output([
+              "git", "ls-files", "src/pyfolio/examples",
+          ], text=True).splitlines()
+          expected = {name.removeprefix("src/") for name in examples}
+          with zipfile.ZipFile(next(Path("dist").glob("*.whl"))) as wheel:
+              actual = {name for name in wheel.namelist() if name.startswith("pyfolio/examples/")}
+              assert actual == expected, (actual, expected)
+              for name in examples:
+                  assert wheel.read(name.removeprefix("src/")) == Path(name).read_bytes()
+          with tarfile.open(next(Path("dist").glob("*.tar.gz"))) as sdist:
+              assert not any(".ipynb_checkpoints" in name for name in sdist.getnames())
 
       - name: Install the built wheel with declared test dependencies
         shell: python
