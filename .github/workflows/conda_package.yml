@@ -3,78 +3,12 @@ name: Anaconda
 on: workflow_dispatch
 
 jobs:
-  build_wheels:
-    name: py${{ matrix.python }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    env:
-      ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-    defaults:
-      run:
-        shell: bash -l {0}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ macos-latest, windows-latest, ubuntu-latest ]
-        python: [ '3.7', '3.8', '3.9']
-
+  historical-recipe:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout pyfolio-reloaded
-        uses: actions/checkout@v6
-
-      - name: Setup miniconda3
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          miniconda-version: latest
-          auto-update-conda: true
-          channel-priority: true
-          mamba-version: "*"
-          python-version: ${{ matrix.python }}
-          activate-environment: recipe
-          channels: ml4t, conda-forge, defaults, anaconda, ranaroussi
-
-      - name: create uploader
-        # address broken client under py3.9
-        if: ${{ matrix.python == '3.9' }}
-        run: conda create -n up python=3.7 anaconda-client
-
-      - name: conda build for ${{ matrix.os }}
+      - name: Explain retired publishing workflow
         run: |
-          conda activate recipe
-          mamba install -n recipe boa conda-verify anaconda-client
-          conda mambabuild --output-folder . --python ${{ matrix.python }} conda/recipe
-
-      - name: activate uploader
-        # address broken client under py3.9
-        if: ${{ matrix.python == '3.9' }}
-        run: conda activate up
-
-      - name: store windows result
-        uses: actions/upload-artifact@v6
-        if: ${{ matrix.os == 'windows-latest' }}
-        with:
-          path: win-64/*.tar.bz2
-
-      - name: upload windows
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: anaconda upload -l main -u ml4t win-64/*.tar.bz2
-
-      - name: store linux result
-        uses: actions/upload-artifact@v6
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        with:
-          path: linux-64/*.tar.bz2
-
-      - name: upload linux
-        if: ${{ matrix.os  == 'ubuntu-latest' }}
-        run: anaconda upload -l main -u ml4t linux-64/*.tar.bz2
-
-      - name: store macos result
-        uses: actions/upload-artifact@v6
-        if: ${{ matrix.os == 'macos-latest' }}
-        with:
-          path: osx-64/*.tar.bz2
-
-      - name: upload macos
-        if: ${{ matrix.os == 'macos-latest' }}
-        run: anaconda upload -l main -u ml4t osx-64/*.tar.bz2
+          echo "The frozen conda/recipe/meta.yaml builds historical Pyfolio 0.9.4."
+          echo "It does not package this checkout or its Python 3.11+ support baseline."
+          echo "Historical channel artifacts remain available. Publishing is retired."
+          exit 1

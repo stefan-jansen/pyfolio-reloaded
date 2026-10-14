@@ -1,6 +1,13 @@
 name: Test Wheels
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      python_version:
+        description: Interpreter to qualify with the built wheel
+        type: choice
+        default: all
+        options: ['all', '3.11', '3.12', '3.13', '3.14', '3.15']
 
 jobs:
   test_wheels:
@@ -8,25 +15,54 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.9", "3.10", "3.11", "3.12" ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ${{ fromJSON(inputs.python_version == 'all' && '["3.11","3.12","3.13","3.14","3.15"]' || format('["{0}"]', inputs.python_version)) }}
     steps:
+      - name: Checkout pyfolio
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Checkout pyfolio
-        uses: actions/checkout@v6
+      - name: Build and check distributions
+        run: |
+          python -m pip install --upgrade build twine
+          python -m build
+          python -m twine check dist/*
 
-      - name: Unittests with tox & pytest
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 90
-          max_attempts: 3
-          retry_on: error
-          new_command_on_retry: |
-            python -m pip install -U pip wheel tox tox-gh-actions
-            python -m pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pyfolio-reloaded[test]
-            tox
-          command: tox -p auto -q
+      - name: Install the built wheel with declared test dependencies
+        shell: python
+        run: |
+          from pathlib import Path
+          import subprocess
+          import sys
+          wheel = next(Path("dist").glob("*.whl")).resolve()
+          subprocess.check_call([sys.executable, "-m", "pip", "install", f"{wheel}[test]"])
+
+      - name: Test installed wheel outside the source tree
+        shell: python
+        env:
+          MPLBACKEND: Agg
+        run: |
+          import os
+          from pathlib import Path
+          import shutil
+          import subprocess
+          import sys
+          import tarfile
+          scratch = Path(os.environ["RUNNER_TEMP"]) / "pyfolio-wheel-tests"
+          unpacked = scratch / "sdist"
+          unpacked.mkdir(parents=True)
+          with tarfile.open(next(Path("dist").glob("*.tar.gz"))) as bundle:
+              bundle.extractall(unpacked, filter="data")
+          packaged = next(unpacked.iterdir())
+          shutil.copytree(packaged / "tests", scratch / "tests")
+          (scratch / "pytest.ini").write_text("[pytest]\ntestpaths = tests\n")
+          subprocess.check_call([
+              sys.executable, "-I", "-m", "pytest", "-n", "2",
+              "--cov=pyfolio", "--cov-report=term", "--tb=short", "tests",
+          ], cwd=scratch)

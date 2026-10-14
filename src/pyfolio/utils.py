@@ -375,9 +375,9 @@ def estimate_intraday(returns, positions, transactions, EOD_hour=23):
 
     # Calculate exposure, then take peak of exposure every day
     txn_val["exposure"] = txn_val.abs().sum(axis=1)
-    condition = txn_val["exposure"] == txn_val.groupby(pd.Grouper(freq="24H"))[
-        "exposure"
-    ].transform(max)
+    condition = txn_val["exposure"] == txn_val.groupby(
+        pd.Grouper(freq=pd.offsets.Hour(24))
+    )["exposure"].transform("max")
     txn_val = txn_val[condition].drop("exposure", axis=1)
 
     # Compute cash delta

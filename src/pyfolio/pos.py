@@ -97,8 +97,8 @@ def get_max_median_position_concentration(positions):
     expos = get_percent_alloc(positions)
     expos = expos.drop("cash", axis=1)
 
-    longs = expos.where(expos.applymap(lambda x: x > 0))
-    shorts = expos.where(expos.applymap(lambda x: x < 0))
+    longs = expos.where(expos > 0)
+    shorts = expos.where(expos < 0)
 
     alloc_summary = pd.DataFrame()
     alloc_summary["max_long"] = longs.max(axis=1)
@@ -198,7 +198,7 @@ def get_sector_exposures(positions, symbol_sector_map):
         )
         warnings.warn(warn_message, UserWarning)
 
-    sector_exp = positions.groupby(by=symbol_sector_map, axis=1).sum()
+    sector_exp = positions.T.groupby(by=symbol_sector_map).sum().T
 
     sector_exp["cash"] = cash
 
