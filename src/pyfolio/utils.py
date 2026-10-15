@@ -385,8 +385,8 @@ def estimate_intraday(returns, positions, transactions, EOD_hour=23):
 
     # Shift EOD positions to positions at start of next trading day
     positions_shifted = positions.copy().shift(1).fillna(0)
-    starting_capital = positions.iloc[0].sum() / (1 + returns[0])
-    positions_shifted.cash[0] = starting_capital
+    starting_capital = positions.iloc[0].sum() / (1 + returns.iloc[0])
+    positions_shifted.loc[positions_shifted.index[0], "cash"] = starting_capital
 
     # Format and add start positions to intraday position changes
     txn_val.index = txn_val.index.normalize()
