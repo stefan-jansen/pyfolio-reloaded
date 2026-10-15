@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Unittests with tox & pytest
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 90
           max_attempts: 3
