@@ -606,6 +606,11 @@ def show_perf_stats(
 
     date_rows = OrderedDict()
     if len(returns.index) > 0:
+        if not isinstance(returns.index, pd.DatetimeIndex):
+            raise TypeError(
+                "returns.index must be a pd.DatetimeIndex. "
+                "Consider converting with returns.index = pd.to_datetime(returns.index)"
+            )
         date_rows["Start date"] = returns.index[0].strftime("%Y-%m-%d")
         date_rows["End date"] = returns.index[-1].strftime("%Y-%m-%d")
 
@@ -624,7 +629,7 @@ def show_perf_stats(
             positions_oos = positions[positions.index >= live_start_date]
             if transactions is not None:
                 transactions_is = transactions[(transactions.index < live_start_date)]
-                transactions_oos = transactions[(transactions.index > live_start_date)]
+                transactions_oos = transactions[(transactions.index >= live_start_date)]
 
         perf_stats_is = perf_func(
             returns_is,
@@ -664,6 +669,12 @@ def show_perf_stats(
             date_rows["Total months"] = int(len(returns) / APPROX_BDAYS_PER_MONTH)
         perf_stats = pd.DataFrame(perf_stats_all, columns=["Backtest"])
 
+    # perf_stats is about to hold a mix of numeric and formatted-percent
+    # strings in the same numeric-dtype column; cast to object up front
+    # rather than let the .loc assignment below silently trigger pandas'
+    # incompatible-dtype upcast, which is deprecated and becomes an error
+    # in a future pandas version.
+    perf_stats = perf_stats.astype(object)
     for column in perf_stats.columns:
         for stat, value in perf_stats[column].items():
             if stat in STAT_FUNCS_PCT:
@@ -848,7 +859,7 @@ def plot_rolling_returns(
                 is_returns,
                 len(oos_cum_returns),
                 cone_std=cone_std,
-                starting_value=is_cum_returns[-1],
+                starting_value=is_cum_returns.iloc[-1],
             )
 
             cone_bounds = cone_bounds.set_index(oos_cum_returns.index)

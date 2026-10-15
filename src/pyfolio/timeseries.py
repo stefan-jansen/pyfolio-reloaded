@@ -227,7 +227,7 @@ def sortino_ratio(returns, required_return=0, period=DAILY):
         Annualized Sortino ratio.
     """
 
-    return ep.sortino_ratio(returns, required_return=required_return)
+    return ep.sortino_ratio(returns, required_return=required_return, period=period)
 
 
 @deprecated(msg=DEPRECATION_WARNING)
@@ -571,8 +571,8 @@ def rolling_regression(
     rolling_window : int, optional
         The days window over which to compute the beta. Defaults to 6 months.
     nan_threshold : float, optional
-        If there are more than this fraction of NaNs, the rolling regression
-        for the given date will be skipped.
+        Skip a window if any factor exceeds this fraction of NaNs, or if
+        no rows have observations for all factors.
 
     Returns
     -------
@@ -594,8 +594,10 @@ def rolling_regression(
         returns_period = ret_no_na[beg:end]
         factor_returns_period = factor_returns.loc[returns_period.index]
 
-        if np.all(factor_returns_period.isnull().mean()) < nan_threshold:
+        if np.all(factor_returns_period.isnull().mean() <= nan_threshold):
             factor_returns_period_dnan = factor_returns_period.dropna()
+            if factor_returns_period_dnan.empty:
+                continue
             reg = linear_model.LinearRegression(fit_intercept=True).fit(
                 factor_returns_period_dnan,
                 returns_period.loc[factor_returns_period_dnan.index],
@@ -949,7 +951,11 @@ def get_top_drawdowns(returns, top=10):
     -------
     drawdowns : list
         List of drawdown peaks, valleys, and recoveries. See get_max_drawdown.
+        Returns an empty list when returns is empty.
     """
+
+    if returns.empty:
+        return []
 
     returns = returns.copy()
     df_cum = ep.cum_returns(returns, 1.0)
