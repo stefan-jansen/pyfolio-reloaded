@@ -1,0 +1,24 @@
+name: Documentation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  html:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v10.3.0
+      - name: Install Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y pandoc
+      - name: Build documentation
+        run: uv run --python 3.12 --extra docs make -C docs html SPHINXOPTS="-W --keep-going"

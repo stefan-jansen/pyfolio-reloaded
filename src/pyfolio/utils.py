@@ -148,17 +148,19 @@ def extract_rets_pos_txn_from_zipline(backtest):
     -------
     returns : pd.Series
         Daily returns of strategy.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     transactions : pd.DataFrame
         Prices and amounts of executed trades. One row per trade.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
 
 
-    Example (on the Quantopian research platform)
-    ---------------------------------------------
+    Examples
+    --------
+    On the Quantopian research platform:
+
     >>> backtest = my_algo.run()
     >>> returns, positions, transactions =
     >>>     pyfolio.utils.extract_rets_pos_txn_from_zipline(backtest)
@@ -265,10 +267,10 @@ def detect_intraday(positions, transactions, threshold=0.25):
     ----------
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     transactions : pd.DataFrame
         Prices and amounts of executed trades. One row per trade.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
 
     Returns
     -------
@@ -294,13 +296,13 @@ def check_intraday(estimate, returns, positions, transactions):
         See description in tears.create_full_tear_sheet.
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     transactions : pd.DataFrame
         Prices and amounts of executed trades. One row per trade.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
 
     Returns
     -------
@@ -344,13 +346,13 @@ def estimate_intraday(returns, positions, transactions, EOD_hour=23):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     transactions : pd.DataFrame
         Prices and amounts of executed trades. One row per trade.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
 
     Returns
     -------
@@ -404,7 +406,7 @@ def clip_returns_to_benchmark(rets, benchmark_rets):
     ----------
     rets : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See pf.tears.create_full_tear_sheet for more details
+        See pf.tears.create_full_tear_sheet for more details
 
     benchmark_rets : pd.Series
         Daily returns of the benchmark, noncumulative.

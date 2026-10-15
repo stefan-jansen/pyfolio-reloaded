@@ -68,14 +68,14 @@ def max_drawdown(returns):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
 
     Returns
     -------
     float
         Maximum drawdown.
 
-    Note
+    Notes
     -----
     See https://en.wikipedia.org/wiki/Drawdown_(economics) for more details.
     """
@@ -152,7 +152,7 @@ def calmar_ratio(returns, period=DAILY):
         Calmar ratio (drawdown ratio) as float. Returns np.nan if there is no
         calmar ratio.
 
-    Note
+    Notes
     -----
     See https://en.wikipedia.org/wiki/Calmar_ratio for more details.
     """
@@ -175,12 +175,16 @@ def omega_ratio(returns, annual_return_threshhold=0.0):
         returns are considered positive or negative. It is converted to a
         value appropriate for the period of the returns for this ratio.
         E.g. An annual minimum acceptable return of 100 translates to a daily
-        minimum acceptable return of 0.01848.
+        minimum acceptable return of 0.01848::
+
             (1 + 100) ** (1. / 252) - 1 = 0.01848
+
         Daily returns must exceed this value to be considered positive. The
         daily return yields the desired annual return when compounded over
-        the average number of business days in a year.
+        the average number of business days in a year::
+
             (1 + 0.01848) ** 252 - 1 = 99.93
+
         - Defaults to 0.0
 
 
@@ -189,7 +193,7 @@ def omega_ratio(returns, annual_return_threshhold=0.0):
     float
         Omega ratio.
 
-    Note
+    Notes
     -----
     See https://en.wikipedia.org/wiki/Omega_ratio for more details.
     """
@@ -223,7 +227,7 @@ def sortino_ratio(returns, required_return=0, period=DAILY):
         Annualized Sortino ratio.
     """
 
-    return ep.sortino_ratio(returns, required_return=required_return)
+    return ep.sortino_ratio(returns, required_return=required_return, period=period)
 
 
 @deprecated(msg=DEPRECATION_WARNING)
@@ -279,7 +283,7 @@ def sharpe_ratio(returns, risk_free=0, period=DAILY):
     np.nan
         If insufficient length of returns or if if adjusted returns are 0.
 
-    Note
+    Notes
     -----
     See https://en.wikipedia.org/wiki/Sharpe_ratio for more details.
     """
@@ -300,7 +304,7 @@ def alpha_beta(returns, factor_returns):
     factor_returns : pd.Series
         Daily noncumulative returns of the benchmark factor to which betas are
         computed. Usually a benchmark such as market returns.
-         - This is in the same style as returns.
+        This is in the same style as returns.
 
     Returns
     -------
@@ -326,7 +330,7 @@ def alpha(returns, factor_returns):
     factor_returns : pd.Series
         Daily noncumulative returns of the benchmark factor to which betas are
         computed. Usually a benchmark such as market returns.
-         - This is in the same style as returns.
+        This is in the same style as returns.
 
     Returns
     -------
@@ -350,7 +354,7 @@ def beta(returns, factor_returns):
     factor_returns : pd.Series
         Daily noncumulative returns of the benchmark factor to which betas are
         computed. Usually a benchmark such as market returns.
-         - This is in the same style as returns.
+        This is in the same style as returns.
 
     Returns
     -------
@@ -395,7 +399,7 @@ def tail_ratio(returns):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in :func:`~pyfolio.timeseries.cum_returns`.
+        See full explanation in :func:`~pyfolio.timeseries.cum_returns`.
 
     Returns
     -------
@@ -419,7 +423,7 @@ def common_sense_ratio(returns):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
 
     Returns
     -------
@@ -438,7 +442,7 @@ def normalize(returns, starting_value=1):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     starting_value : float, optional
        The starting returns (default 1).
 
@@ -460,7 +464,7 @@ def cum_returns(returns, starting_value=0):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     starting_value : float, optional
        The starting returns (default 1).
 
@@ -508,12 +512,12 @@ def rolling_beta(returns, factor_returns, rolling_window=APPROX_BDAYS_PER_MONTH 
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     factor_returns : pd.Series or pd.DataFrame
         Daily noncumulative returns of the benchmark factor to which betas are
         computed. Usually a benchmark such as market returns.
-         - If DataFrame is passed, computes rolling beta for each column.
-         - This is in the same style as returns.
+        If DataFrame is passed, computes rolling beta for each column.
+        This is in the same style as returns.
     rolling_window : int, optional
         The size of the rolling window, in days, over which to compute
         beta (default 6 months).
@@ -523,7 +527,7 @@ def rolling_beta(returns, factor_returns, rolling_window=APPROX_BDAYS_PER_MONTH 
     pd.Series
         Rolling beta.
 
-    Note
+    Notes
     -----
     See https://en.wikipedia.org/wiki/Beta_(finance) for more details.
     """
@@ -558,17 +562,17 @@ def rolling_regression(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     factor_returns : pd.DataFrame
         Daily noncumulative returns of the benchmark factor to which betas are
         computed. Usually a benchmark such as market returns.
-         - Computes rolling beta for each column.
-         - This is in the same style as returns.
+        Computes rolling beta for each column.
+        This is in the same style as returns.
     rolling_window : int, optional
         The days window over which to compute the beta. Defaults to 6 months.
     nan_threshold : float, optional
-        If there are more than this fraction of NaNs, the rolling regression
-        for the given date will be skipped.
+        Skip a window if any factor exceeds this fraction of NaNs, or if
+        no rows have observations for all factors.
 
     Returns
     -------
@@ -590,8 +594,10 @@ def rolling_regression(
         returns_period = ret_no_na[beg:end]
         factor_returns_period = factor_returns.loc[returns_period.index]
 
-        if np.all(factor_returns_period.isnull().mean()) < nan_threshold:
+        if np.all(factor_returns_period.isnull().mean() <= nan_threshold):
             factor_returns_period_dnan = factor_returns_period.dropna()
+            if factor_returns_period_dnan.empty:
+                continue
             reg = linear_model.LinearRegression(fit_intercept=True).fit(
                 factor_returns_period_dnan,
                 returns_period.loc[factor_returns_period_dnan.index],
@@ -610,7 +616,7 @@ def gross_lev(positions):
     ----------
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
 
     Returns
     -------
@@ -630,7 +636,7 @@ def value_at_risk(returns, period=None, sigma=2.0):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     period : str, optional
         Period over which to calculate VaR. Set to 'weekly',
         'monthly', or 'yearly', otherwise defaults to period of
@@ -703,15 +709,15 @@ def perf_stats(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     factor_returns : pd.Series, optional
         Daily noncumulative returns of the benchmark factor to which betas are
         computed. Usually a benchmark such as market returns.
-         - This is in the same style as returns.
-         - If None, do not compute alpha, beta, and information ratio.
+        This is in the same style as returns.
+        If None, do not compute alpha, beta, and information ratio.
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     transactions : pd.DataFrame
         Prices and amounts of executed trades. One row per trade.
         - See full explanation in tears.create_full_tear_sheet.
@@ -750,12 +756,12 @@ def perf_stats_bootstrap(returns, factor_returns=None, return_stats=True, **kwar
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     factor_returns : pd.Series, optional
         Daily noncumulative returns of the benchmark factor to which betas are
         computed. Usually a benchmark such as market returns.
-         - This is in the same style as returns.
-         - If None, do not compute alpha, beta, and information ratio.
+        This is in the same style as returns.
+        If None, do not compute alpha, beta, and information ratio.
     return_stats : boolean (optional)
         If True, returns a DataFrame of mean, median, 5 and 95 percentiles
         for each perf metric.
@@ -807,11 +813,11 @@ def calc_bootstrap(func, returns, *args, **kwargs):
         statistic). Additional args and kwargs are passed as well.
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     factor_returns : pd.Series, optional
         Daily noncumulative returns of the benchmark factor to which betas are
         computed. Usually a benchmark such as market returns.
-         - This is in the same style as returns.
+        This is in the same style as returns.
     n_samples : int, optional
         Number of bootstrap samples to draw. Default is 1000.
         Increasing this will lead to more stable / accurate estimates.
@@ -917,7 +923,7 @@ def get_max_drawdown(returns):
     float
         Maximum drawdown.
 
-    Note
+    Notes
     -----
     See https://en.wikipedia.org/wiki/Drawdown_(economics) for more details.
     """
@@ -937,7 +943,7 @@ def get_top_drawdowns(returns, top=10):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     top : int, optional
         The amount of top drawdowns to find (default 10).
 
@@ -977,7 +983,7 @@ def gen_drawdown_table(returns, top=10):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     top : int, optional
         The amount of top drawdowns to find (default 10).
 
@@ -1034,7 +1040,7 @@ def rolling_volatility(returns, rolling_vol_window):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     rolling_vol_window : int
         Length of rolling window, in days, over which to compute.
 
@@ -1055,7 +1061,7 @@ def rolling_sharpe(returns, rolling_sharpe_window):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     rolling_sharpe_window : int
         Length of rolling window, in days, over which to compute.
 
@@ -1064,7 +1070,7 @@ def rolling_sharpe(returns, rolling_sharpe_window):
     pd.Series
         Rolling Sharpe ratio.
 
-    Note
+    Notes
     -----
     See https://en.wikipedia.org/wiki/Sharpe_ratio for more details.
     """
@@ -1166,7 +1172,7 @@ def forecast_cone_bootstrap(
     ----------
     is_returns : pd.Series
         In-sample daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
     num_days : int
         Number of days to project the probability cone forward.
     cone_std : int, float, or list of int/float
@@ -1217,7 +1223,7 @@ def extract_interesting_date_ranges(returns, periods=None):
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in tears.create_full_tear_sheet.
+        See full explanation in tears.create_full_tear_sheet.
 
     Returns
     -------
