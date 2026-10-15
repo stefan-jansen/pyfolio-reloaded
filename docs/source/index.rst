@@ -9,4 +9,5 @@
    notebooks/zipline_algo_example
    notebooks/round_trip_tear_sheet_example
    notebooks/sector_mappings_example
+   notebooks/slippage_example
    api-reference
