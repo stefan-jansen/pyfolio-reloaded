@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
 from pathlib import Path
-import pydata_sphinx_theme
-from pyfolio import __version__ as version
 
-sys.path.insert(0, Path("../..").resolve(strict=True).as_posix())
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+from pyfolio import __version__ as version
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -15,6 +14,8 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx_copybutton",
 ]
+
+nbsphinx_execute = "never"
 
 templates_path = ["_templates"]
 
@@ -27,7 +28,7 @@ copyright = "2016, Quantopian, Inc."
 author = "Quantopian, Inc."
 
 release = version
-language = None
+language = "en"
 
 exclude_patterns = []
 
@@ -38,7 +39,7 @@ pygments_style = "sphinx"
 todo_include_todos = False
 
 html_theme = "pydata_sphinx_theme"
-html_theme_path = pydata_sphinx_theme.get_html_theme_path()
+html_title = "Pyfolio Reloaded"
 
 html_theme_options = {
     "github_url": "https://github.com/stefan-jansen/pyfolio-reloaded",
@@ -47,20 +48,7 @@ html_theme_options = {
         {"name": "ML for Trading", "url": "https://ml4trading.io"},
         {"name": "Community", "url": "https://exchange.ml4trading.io"},
     ],
-    "google_analytics_id": "UA-74956955-3",
     "use_edit_page_button": True,
-    "favicons": [
-        {
-            "rel": "icon",
-            "sizes": "16x16",
-            "href": "assets/favicon16x16.ico",
-        },
-        {
-            "rel": "icon",
-            "sizes": "32x32",
-            "href": "assets/favicon32x32.ico",
-        },
-    ],
 }
 
 html_context = {

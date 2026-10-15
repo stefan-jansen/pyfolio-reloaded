@@ -95,7 +95,7 @@ def days_to_liquidate_positions(
     positions_alloc = pos.get_percent_alloc(positions)
     positions_alloc = positions_alloc.drop("cash", axis=1)
 
-    days_to_liquidate = (positions_alloc * capital_base) / (
+    days_to_liquidate = (positions_alloc.abs() * capital_base) / (
         max_bar_consumption * roll_mean_dv
     )
 

@@ -100,28 +100,35 @@ def create_full_tear_sheet(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - Time series with decimal returns.
-         - Example:
+        Time series with decimal returns.
+
+        Example::
+
             2015-07-16    -0.012143
             2015-07-17    0.045350
             2015-07-20    0.030957
             2015-07-21    0.004902
     positions : pd.DataFrame, optional
         Daily net position values.
-         - Time series of dollar amount invested in each position and cash.
-         - Days where stocks are not held can be represented by 0 or NaN.
-         - Non-working capital is labelled 'cash'
-         - Example:
+        Time series of dollar amount invested in each position and cash.
+        Days where stocks are not held can be represented by 0 or NaN.
+        Non-working capital is labelled 'cash'
+
+        Example::
+
             index         'AAPL'         'MSFT'          cash
             2004-01-09    13939.3800     -14012.9930     711.5585
             2004-01-12    14492.6300     -14624.8700     27.1821
             2004-01-13    -13853.2800    13653.6400      -43.6375
     transactions : pd.DataFrame, optional
         Executed trade volumes and fill prices.
+
         - One row per trade.
         - Trades on different names that occur at the
           same time will have identical indicies.
-        - Example:
+
+        Example::
+
             index                  amount   price    symbol
             2004-01-09 12:18:01    483      324.12   'AAPL'
             2004-01-09 12:18:01    122      83.10    'MSFT'
@@ -156,8 +163,8 @@ def create_full_tear_sheet(
     cone_std : float, or tuple, optional
         If float, The standard deviation to use for the cone plots.
         If tuple, Tuple of standard deviation values to use for the cone plots
-         - The cone is a normal distribution with this standard deviation
-             centered around a linear regression.
+        The cone is a normal distribution with this standard deviation
+        centered around a linear regression.
     bootstrap : boolean (optional)
         Whether to perform bootstrap analysis for the performance
         metrics. Takes a few minutes longer.
@@ -175,7 +182,7 @@ def create_full_tear_sheet(
         Extra rows to display at the top of the perf stats table.
     set_context : boolean, optional
         If True, set default plotting style context.
-         - See plotting.context().
+        See plotting.plotting_context().
     factor_partitions : dict, optional
         dict specifying how factors should be separated in perf attrib
         factor returns and risk exposures plots
@@ -293,28 +300,35 @@ def create_simple_tear_sheet(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - Time series with decimal returns.
-         - Example:
+        Time series with decimal returns.
+
+        Example::
+
             2015-07-16    -0.012143
             2015-07-17    0.045350
             2015-07-20    0.030957
             2015-07-21    0.004902
     positions : pd.DataFrame, optional
         Daily net position values.
-         - Time series of dollar amount invested in each position and cash.
-         - Days where stocks are not held can be represented by 0 or NaN.
-         - Non-working capital is labelled 'cash'
-         - Example:
+        Time series of dollar amount invested in each position and cash.
+        Days where stocks are not held can be represented by 0 or NaN.
+        Non-working capital is labelled 'cash'
+
+        Example::
+
             index         'AAPL'         'MSFT'          cash
             2004-01-09    13939.3800     -14012.9930     711.5585
             2004-01-12    14492.6300     -14624.8700     27.1821
             2004-01-13    -13853.2800    13653.6400      -43.6375
     transactions : pd.DataFrame, optional
         Executed trade volumes and fill prices.
+
         - One row per trade.
         - Trades on different names that occur at the
           same time will have identical indicies.
-        - Example:
+
+        Example::
+
             index                  amount   price    symbol
             2004-01-09 12:18:01    483      324.12   'AAPL'
             2004-01-09 12:18:01    122      83.10    'MSFT'
@@ -491,10 +505,10 @@ def create_returns_tear_sheet(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     positions : pd.DataFrame, optional
         Daily net position values.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     transactions : pd.DataFrame, optional
         Executed trade volumes and fill prices.
         - See full explanation in create_full_tear_sheet.
@@ -504,11 +518,11 @@ def create_returns_tear_sheet(
     cone_std : float, or tuple, optional
         If float, The standard deviation to use for the cone plots.
         If tuple, Tuple of standard deviation values to use for the cone plots
-         - The cone is a normal distribution with this standard deviation
-             centered around a linear regression.
+        The cone is a normal distribution with this standard deviation
+        centered around a linear regression.
     benchmark_rets : pd.Series, optional
         Daily noncumulative returns of the benchmark.
-         - This is in the same style as returns.
+        This is in the same style as returns.
     bootstrap : boolean, optional
         Whether to perform bootstrap analysis for the performance
         metrics. Takes a few minutes longer.
@@ -523,6 +537,9 @@ def create_returns_tear_sheet(
 
     if benchmark_rets is not None:
         returns = utils.clip_returns_to_benchmark(returns, benchmark_rets)
+
+    if returns.empty:
+        raise ValueError("returns must contain at least one observation")
 
     plotting.show_perf_stats(
         returns,
@@ -680,10 +697,10 @@ def create_position_tear_sheet(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     show_and_plot_top_pos : int, optional
         By default, this is 2, and both prints and plots the
         top 10 positions.
@@ -696,7 +713,7 @@ def create_position_tear_sheet(
         Security ids as keys, sectors as values.
     transactions : pd.DataFrame, optional
         Prices and amounts of executed trades. One row per trade.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     estimate_intraday: boolean or str, optional
         Approximate returns for intraday strategies.
         See description in create_full_tear_sheet.
@@ -783,21 +800,21 @@ def create_txn_tear_sheet(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     transactions : pd.DataFrame
         Prices and amounts of executed trades. One row per trade.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     turnover_denom : str, optional
         Either AGB or portfolio_value, default AGB.
         - See full explanation in txn.get_turnover.
     unadjusted_returns : pd.Series, optional
         Daily unadjusted returns of the strategy, noncumulative.
-        Will plot additional swippage sweep analysis.
-         - See pyfolio.plotting.plot_swippage_sleep and
-           pyfolio.plotting.plot_slippage_sensitivity
+        Will plot additional slippage sweep analysis.
+        See pyfolio.plotting.plot_slippage_sweep and
+        pyfolio.plotting.plot_slippage_sensitivity
     estimate_intraday: boolean or str, optional
         Approximate returns for intraday strategies.
         See description in create_full_tear_sheet.
@@ -885,13 +902,13 @@ def create_round_trip_tear_sheet(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     transactions : pd.DataFrame
         Prices and amounts of executed trades. One row per trade.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     sector_mappings : dict or pd.Series, optional
         Security identifier to sector mapping.
         Security ids as keys, sectors as values.
@@ -986,10 +1003,10 @@ def create_interesting_times_tear_sheet(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     benchmark_rets : pd.Series
         Daily noncumulative returns of the benchmark.
-         - This is in the same style as returns.
+        This is in the same style as returns.
     periods: dict or OrderedDict, optional
         historical event dates that may have had significant
         impact on markets
@@ -1083,13 +1100,13 @@ def create_capacity_tear_sheet(
     ----------
     returns : pd.Series
         Daily returns of the strategy, noncumulative.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     positions : pd.DataFrame
         Daily net position values.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     transactions : pd.DataFrame
         Prices and amounts of executed trades. One row per trade.
-         - See full explanation in create_full_tear_sheet.
+        See full explanation in create_full_tear_sheet.
     market_data : pd.DataFrame
         Daily market_data
         - DataFrame has a multi-index index, one level is dates and another is
@@ -1222,8 +1239,8 @@ def create_perf_attrib_tear_sheet(
 
     transactions : pd.DataFrame, optional
         Prices and amounts of executed trades. One row per trade.
-         - See full explanation in create_full_tear_sheet.
-         - Default is None.
+        See full explanation in create_full_tear_sheet.
+        Default is None.
 
     pos_in_dollars : boolean, optional
         Flag indicating whether `positions` are in dollars or percentages
@@ -1232,7 +1249,9 @@ def create_perf_attrib_tear_sheet(
     factor_partitions : dict
         dict specifying how factors should be separated in factor returns
         and risk exposures plots
-        - Example:
+
+        Example::
+
           {'style': ['momentum', 'size', 'value', ...],
            'sector': ['technology', 'materials', ... ]}
 
