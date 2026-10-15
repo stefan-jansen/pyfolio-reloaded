@@ -27,7 +27,7 @@ jobs:
         python-version: ${{ fromJSON(inputs.minimum_python_only && '["3.11"]' || '["3.11","3.12","3.13","3.14","3.15"]') }}
     steps:
       - name: Checkout pyfolio
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6

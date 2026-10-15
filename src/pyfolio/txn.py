@@ -140,7 +140,7 @@ def adjust_returns_for_slippage(returns, positions, transactions, slippage_bps):
     traded_value = get_txn_vol(transactions).txn_volume
     slippage_dollars = traded_value * slippage
     adjusted_pnl = pnl.add(-slippage_dollars, fill_value=0)
-    adjusted_returns = returns * adjusted_pnl / pnl
+    adjusted_returns = adjusted_pnl / portfolio_value
 
     return adjusted_returns
 
