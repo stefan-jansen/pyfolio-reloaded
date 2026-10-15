@@ -227,7 +227,7 @@ def sortino_ratio(returns, required_return=0, period=DAILY):
         Annualized Sortino ratio.
     """
 
-    return ep.sortino_ratio(returns, required_return=required_return)
+    return ep.sortino_ratio(returns, required_return=required_return, period=period)
 
 
 @deprecated(msg=DEPRECATION_WARNING)
