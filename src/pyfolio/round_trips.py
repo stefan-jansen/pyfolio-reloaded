@@ -379,6 +379,14 @@ def gen_round_trip_stats(round_trips):
     round_trips.print_round_trip_stats
     """
 
+    if "returns" not in round_trips.columns:
+        raise ValueError(
+            "Portfolio-relative round-trip statistics require portfolio_value "
+            "(portfolio NAV including cash). Pass portfolio_value to "
+            "extract_round_trips; rt_returns are trade-relative and cannot "
+            "replace portfolio-relative returns."
+        )
+
     stats = {}
     stats["pnl"] = agg_all_long_short(round_trips, "pnl", PNL_STATS)
     stats["summary"] = agg_all_long_short(round_trips, "pnl", SUMMARY_STATS)
