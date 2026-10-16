@@ -9,10 +9,19 @@
 [![PyPI](https://github.com/stefan-jansen/pyfolio-reloaded/actions/workflows/build_wheels.yml/badge.svg)](https://github.com/stefan-jansen/pyfolio-reloaded/actions/workflows/build_wheels.yml)
 [![Coverage Status](https://coveralls.io/repos/github/stefan-jansen/pyfolio-reloaded/badge.svg?branch=main)](https://coveralls.io/github/stefan-jansen/pyfolio-reloaded?branch=main)
 ![GitHub issues](https://img.shields.io/github/issues/stefan-jansen/pyfolio-reloaded)
-![Discourse users](https://img.shields.io/discourse/users?server=https%3A%2F%2Fexchange.ml4trading.io%2F)
 ![Twitter Follow](https://img.shields.io/twitter/follow/ml4trading?style=social)
 
 pyfolio is a Python library for performance and risk analysis of financial portfolios that works well with the [Zipline](https://zipline.ml4trading.io/) open source backtesting library.
+
+## Maintenance and new development
+
+We continue to maintain Pyfolio Reloaded for bug, security and compatibility fixes.
+Our new feature development focuses on the current [ML4T libraries](https://www.ml4trading.io/),
+including [ML4T Diagnostic](https://github.com/ml4t/diagnostic).
+For new projects, we recommend evaluating Diagnostic through its
+[migration guide](https://www.ml4trading.io/docs/diagnostic/user-guide/migration/#pyfolio-portfolio-and-performance-analysis),
+which includes a runnable portfolio example and explains differences between the workflows.
+See the [Diagnostic documentation](https://www.ml4trading.io/docs/diagnostic/) for its supported APIs.
 
 ## Trading Strategy Analysis with pyfolio
 
@@ -104,6 +113,9 @@ You can also join our [community](https://exchange.ml4trading.io).
 Please [open an issue](https://github.com/stefan-jansen/pyfolio-reloaded/issues/new) for support.
 
 ## Contributing
+
+Read the [contribution guide](https://github.com/stefan-jansen/pyfolio-reloaded/blob/main/CONTRIBUTING.md)
+before submitting an issue or pull request. This library accepts bug, security and compatibility fixes.
 
 If you'd like to contribute, a great place to look is the [issues marked with help-wanted](https://github.com/stefan-jansen/pyfolio-reloaded/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
 
