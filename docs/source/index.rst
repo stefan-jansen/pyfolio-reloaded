@@ -11,3 +11,4 @@
    notebooks/sector_mappings_example
    notebooks/slippage_example
    api-reference
+   contributing

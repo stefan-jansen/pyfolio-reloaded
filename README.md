@@ -93,6 +93,9 @@ Please [open an issue](https://github.com/stefan-jansen/pyfolio-reloaded/issues/
 
 ## Contributing
 
+Read the [contribution guide](https://github.com/stefan-jansen/pyfolio-reloaded/blob/main/CONTRIBUTING.md)
+before submitting an issue or pull request. This library accepts bug, security and compatibility fixes.
+
 If you'd like to contribute, a great place to look is the [issues marked with help-wanted](https://github.com/stefan-jansen/pyfolio-reloaded/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
 
 For a list of core developers and outside collaborators, see [the GitHub contributors list](https://github.com/stefan-jansen/pyfolio-reloaded/graphs/contributors).
