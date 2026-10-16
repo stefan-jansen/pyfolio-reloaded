@@ -615,7 +615,7 @@ def show_perf_stats(
         date_rows["End date"] = returns.index[-1].strftime("%Y-%m-%d")
 
     if live_start_date is not None:
-        live_start_date = ep.utils.get_utc_timestamp(live_start_date)
+        live_start_date = utils._comparable_live_start(live_start_date, returns.index)
         returns_is = returns[returns.index < live_start_date]
         returns_oos = returns[returns.index >= live_start_date]
 
@@ -625,11 +625,19 @@ def show_perf_stats(
         transactions_oos = None
 
         if positions is not None:
-            positions_is = positions[positions.index < live_start_date]
-            positions_oos = positions[positions.index >= live_start_date]
+            positions_cutoff = utils._comparable_live_start(
+                live_start_date, positions.index
+            )
+            positions_is = positions[positions.index < positions_cutoff]
+            positions_oos = positions[positions.index >= positions_cutoff]
             if transactions is not None:
-                transactions_is = transactions[(transactions.index < live_start_date)]
-                transactions_oos = transactions[(transactions.index >= live_start_date)]
+                transactions_cutoff = utils._comparable_live_start(
+                    live_start_date, transactions.index
+                )
+                transactions_is = transactions[transactions.index < transactions_cutoff]
+                transactions_oos = transactions[
+                    transactions.index >= transactions_cutoff
+                ]
 
         perf_stats_is = perf_func(
             returns_is,
@@ -727,7 +735,7 @@ def plot_returns(returns, live_start_date=None, ax=None):
     ax.set_ylabel("Returns")
 
     if live_start_date is not None:
-        live_start_date = ep.utils.get_utc_timestamp(live_start_date)
+        live_start_date = utils._comparable_live_start(live_start_date, returns.index)
         is_returns = returns.loc[returns.index < live_start_date]
         oos_returns = returns.loc[returns.index >= live_start_date]
         is_returns.plot(ax=ax, color="g")
@@ -834,7 +842,7 @@ def plot_rolling_returns(
         )
 
     if live_start_date is not None:
-        live_start_date = ep.utils.get_utc_timestamp(live_start_date)
+        live_start_date = utils._comparable_live_start(live_start_date, returns.index)
         is_cum_returns = cum_rets.loc[cum_rets.index < live_start_date]
         oos_cum_returns = cum_rets.loc[cum_rets.index >= live_start_date]
     else:
@@ -1380,6 +1388,9 @@ def plot_return_quantiles(returns, live_start_date=None, ax=None, **kwargs):
 
     if ax is None:
         ax = plt.gca()
+
+    if live_start_date is not None:
+        live_start_date = utils._comparable_live_start(live_start_date, returns.index)
 
     is_returns = (
         returns
