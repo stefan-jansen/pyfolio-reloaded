@@ -25,7 +25,7 @@ class TransactionsTestCase(TestCase):
         )
 
         # Set every other non-cash position to 40
-        positions[0][::2] = 40
+        positions.loc[positions.index[::2], 0] = 40
 
         transactions = pd.DataFrame(
             data=[], columns=["sid", "amount", "price", "symbol"], index=dates

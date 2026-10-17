@@ -287,7 +287,7 @@ class TestStats(TestCase):
 
     simple_month_rets = pd.Series(
         [0.1] * 3 + [0] * 497,
-        pd.date_range("2000-1-31", periods=500, freq="M"),
+        pd.date_range("2000-1-31", periods=500, freq=pd.offsets.MonthEnd()),
     )
 
     simple_benchmark = pd.Series(

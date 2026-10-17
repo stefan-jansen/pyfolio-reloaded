@@ -1,3 +1,9 @@
-include versioneer.py
-include pyfolio/_version.py
 include LICENSE
+recursive-include tests *.py *.csv *.csv.gz matplotlibrc
+include src/pyfolio/examples/results.pickle
+include src/pyfolio/examples/round_trip_tear_sheet_example.ipynb
+include src/pyfolio/examples/sector_mappings_example.ipynb
+include src/pyfolio/examples/single_stock_example.ipynb
+include src/pyfolio/examples/slippage_example.ipynb
+include src/pyfolio/examples/zipline_algo_example.ipynb
+prune src/pyfolio/examples/.ipynb_checkpoints

@@ -6,7 +6,6 @@
 
 ![PyPI](https://img.shields.io/pypi/v/pyfolio-reloaded)
 [![Tests](https://github.com/stefan-jansen/pyfolio-reloaded/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/stefan-jansen/pyfolio-reloaded/actions/workflows/unit_tests.yml)
-[![conda](https://github.com/stefan-jansen/pyfolio-reloaded/actions/workflows/conda_package.yml/badge.svg)](https://github.com/stefan-jansen/pyfolio-reloaded/actions/workflows/conda_package.yml)
 [![PyPI](https://github.com/stefan-jansen/pyfolio-reloaded/actions/workflows/build_wheels.yml/badge.svg)](https://github.com/stefan-jansen/pyfolio-reloaded/actions/workflows/build_wheels.yml)
 [![Coverage Status](https://coveralls.io/repos/github/stefan-jansen/pyfolio-reloaded/badge.svg?branch=main)](https://coveralls.io/github/stefan-jansen/pyfolio-reloaded?branch=main)
 ![GitHub issues](https://img.shields.io/github/issues/stefan-jansen/pyfolio-reloaded)
@@ -53,27 +52,40 @@ In addition, it visualizes how several risk and return metrics behave over time:
 
 ## Installation
 
-To install pyfolio, run:
+This source version targets Python 3.11-3.15. Python 3.9 and 3.10 are end of life
+and are retired from the next release. Existing release artifacts retain their
+original Python requirements. See the [Python support schedule](https://devguide.python.org/versions/).
+
+Python 3.14 requires pandas 2.3.3 and NumPy 2.3.3 or newer. Python 3.15 requires
+pandas 3.0.6 and NumPy 2.5.4 or newer; pandas 2.3.3 crashes during date-range
+construction in the stable CPython 3.15 Linux qualification. The dependency markers
+select the appropriate combination. Bottleneck currently builds from source on
+Python 3.15, so that installation needs a C compiler.
+
+To install a published Pyfolio release into a supported environment, run:
 
 ```bash
 pip install pyfolio-reloaded
 ```
-or
+
+The Conda channel contains historical releases:
 
 ```bash
 conda install -c ml4t pyfolio-reloaded
 ```
 
+The frozen Conda 0.9.4 recipe and existing channel artifacts are preserved.
+That recipe does not build this source version, and its publishing workflow is retired.
+
 ### Development
 
-For development, you may want to use a [virtual environment](https://docs.python-guide.org/en/latest/dev/virtualenvs/) to avoid dependency conflicts between pyfolio and other Python projects you have.
+Clone this repository, then create an isolated environment and install the declared extras:
 
-To get set up with a virtual env, run:
 ```bash
-mkvirtualenv pyfolio
+uv venv --python 3.11
+uv pip install -e '.[test,docs,dev]'
+uv run pre-commit install
 ```
-
-Next, clone this git repository and run `python -m pip install .[all]` and edit the library files directly.
 
 ## Usage
 

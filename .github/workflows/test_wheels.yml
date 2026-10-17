@@ -1,6 +1,13 @@
 name: Test Wheels
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      python_version:
+        description: Interpreter to qualify with the built wheel
+        type: choice
+        default: all
+        options: ['all', '3.11', '3.12', '3.13', '3.14', '3.15']
 
 jobs:
   test_wheels:
@@ -8,25 +15,153 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.9", "3.10", "3.11", "3.12" ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ${{ fromJSON(inputs.python_version == 'all' && '["3.11","3.12","3.13","3.14","3.15"]' || format('["{0}"]', inputs.python_version)) }}
     steps:
+      - name: Checkout pyfolio
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Checkout pyfolio
-        uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.0
 
-      - name: Unittests with tox & pytest
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 90
-          max_attempts: 3
-          retry_on: error
-          new_command_on_retry: |
-            python -m pip install -U pip wheel tox tox-gh-actions
-            python -m pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pyfolio-reloaded[test]
-            tox
-          command: tox -p auto -q
+      - name: Create a notebook checkpoint for the packaging regression
+        shell: python
+        run: |
+          from pathlib import Path
+          import shutil
+          notebook = Path("src/pyfolio/examples/round_trip_tear_sheet_example.ipynb")
+          checkpoint = notebook.parent / ".ipynb_checkpoints" / f"{notebook.stem}-checkpoint.ipynb"
+          checkpoint.parent.mkdir(exist_ok=True)
+          shutil.copyfile(notebook, checkpoint)
+
+      - name: Build and check distributions
+        run: |
+          python -m pip install --upgrade build twine
+          python -m build
+          python -m twine check dist/*
+
+      - name: Build with the minimum declared build dependencies
+        shell: python
+        run: |
+          from pathlib import Path
+          import subprocess
+          import sys
+          import tomllib
+          requirements = tomllib.loads(Path("pyproject.toml").read_text())["build-system"]["requires"]
+          Path("minimum-build-requirements.in").write_text("\n".join(requirements) + "\n")
+          subprocess.check_call([
+              "uv", "pip", "compile", "--resolution", "lowest-direct",
+              "--python", sys.executable, "--output-file", "minimum-build-constraints.txt",
+              "minimum-build-requirements.in",
+          ])
+          subprocess.check_call([
+              "uv", "build", "--python", sys.executable,
+              "--build-constraints", "minimum-build-constraints.txt",
+              "--out-dir", "minimum-dist",
+          ])
+          distributions = list(Path("minimum-dist").glob("*.whl"))
+          distributions += list(Path("minimum-dist").glob("*.tar.gz"))
+          subprocess.check_call([sys.executable, "-m", "twine", "check", *map(str, distributions)])
+
+      - name: Verify wheel payloads and exclude notebook checkpoints
+        shell: python
+        run: |
+          import email
+          from pathlib import Path
+          import subprocess
+          import tarfile
+          import zipfile
+          examples = subprocess.check_output([
+              "git", "ls-files", "src/pyfolio/examples",
+          ], text=True).splitlines()
+          expected = {name.removeprefix("src/") for name in examples}
+          with zipfile.ZipFile(next(Path("dist").glob("*.whl"))) as original:
+              modules = {
+                  name: original.read(name) for name in original.namelist()
+                  if name.startswith("pyfolio/") and name.endswith(".py")
+                  and name != "pyfolio/_version.py"
+              }
+          for folder in ["dist", "minimum-dist"]:
+              with zipfile.ZipFile(next(Path(folder).glob("*.whl"))) as wheel:
+                  actual = {name for name in wheel.namelist() if name.startswith("pyfolio/examples/")}
+                  assert actual == expected, (actual, expected)
+                  for name in examples:
+                      assert wheel.read(name.removeprefix("src/")) == Path(name).read_bytes()
+                  for name, content in modules.items():
+                      assert wheel.read(name) == content
+                  metadata = email.message_from_bytes(wheel.read(next(
+                      name for name in wheel.namelist() if name.endswith("/METADATA")
+                  )))
+                  assert metadata["Name"] == "pyfolio-reloaded"
+                  assert metadata["License-Expression"] == "Apache-2.0"
+                  assert wheel.read(next(
+                      name for name in wheel.namelist() if name.endswith("/licenses/LICENSE")
+                  )) == Path("LICENSE").read_bytes()
+              with tarfile.open(next(Path(folder).glob("*.tar.gz"))) as sdist:
+                  assert not any(".ipynb_checkpoints" in name for name in sdist.getnames())
+
+      - name: Install the built wheel with declared test dependencies
+        shell: python
+        run: |
+          from pathlib import Path
+          import subprocess
+          import sys
+          wheel = next(Path("dist").glob("*.whl")).resolve()
+          subprocess.check_call([sys.executable, "-m", "pip", "install", f"{wheel}[test]"])
+
+      - name: Test installed wheel outside the source tree
+        shell: python
+        env:
+          MPLBACKEND: Agg
+        run: |
+          import os
+          from pathlib import Path
+          import shutil
+          import subprocess
+          import sys
+          import tarfile
+          scratch = Path(os.environ["RUNNER_TEMP"]) / "pyfolio-wheel-tests"
+          unpacked = scratch / "sdist"
+          unpacked.mkdir(parents=True)
+          with tarfile.open(next(Path("dist").glob("*.tar.gz"))) as bundle:
+              bundle.extractall(unpacked, filter="data")
+          packaged = next(unpacked.iterdir())
+          shutil.copytree(packaged / "tests", scratch / "tests")
+          (scratch / "pytest.ini").write_text("[pytest]\ntestpaths = tests\n")
+          subprocess.check_call([
+              sys.executable, "-I", "-c",
+              "import importlib.metadata as m, pyfolio; assert pyfolio.__version__ == m.version('pyfolio-reloaded')",
+          ], cwd=scratch)
+          subprocess.check_call([
+              sys.executable, "-I", "-m", "pytest", "-n", "2",
+              "--cov=pyfolio", "--cov-report=term", "--tb=short", "tests",
+          ], cwd=scratch)
+
+      - name: Smoke test the minimum-backend wheel version API
+        shell: python
+        run: |
+          import hashlib
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          import zipfile
+          wheel = next(Path("minimum-dist").glob("*.whl")).resolve()
+          with zipfile.ZipFile(wheel) as bundle:
+              version_hash = hashlib.sha256(bundle.read("pyfolio/_version.py")).hexdigest()
+          subprocess.check_call([
+              sys.executable, "-m", "pip", "install", "--force-reinstall", "--no-deps", str(wheel),
+          ])
+          subprocess.check_call([
+              sys.executable, "-I", "-c",
+              "import hashlib, importlib.metadata as m, pathlib, pyfolio, sys; "
+              "assert pyfolio.__version__ == m.version('pyfolio-reloaded'); "
+              "assert hashlib.sha256(pathlib.Path(pyfolio.__file__).with_name('_version.py').read_bytes()).hexdigest() == sys.argv[1]",
+              version_hash,
+          ], cwd=os.environ["RUNNER_TEMP"])

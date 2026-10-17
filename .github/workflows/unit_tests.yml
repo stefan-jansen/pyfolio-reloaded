@@ -2,6 +2,11 @@ name: Tests
 
 on:
   workflow_dispatch:
+    inputs:
+      minimum_python_only:
+        description: Run only the declared minimum Python version
+        type: boolean
+        default: false
   schedule:
     - cron: "0 9 * * 6"
   push:
@@ -19,7 +24,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest , windows-latest, macos-latest ]
-        python-version: [ '3.10', '3.11', '3.12', '3.13']
+        python-version: ${{ fromJSON(inputs.minimum_python_only && '["3.11"]' || '["3.11","3.12","3.13","3.14","3.15"]') }}
     steps:
       - name: Checkout pyfolio
         uses: actions/checkout@v7

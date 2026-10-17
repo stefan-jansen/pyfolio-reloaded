@@ -2,7 +2,7 @@
 name = "pyfolio-reloaded"
 description = "Performance and risk analysis of financial portfolios with Python"
 
-requires-python = '>=3.9'
+requires-python = '>=3.11,<3.16'
 dynamic = ["version"]
 readme = "README.md"
 authors = [
@@ -13,18 +13,17 @@ maintainers = [
     { name = 'Stefan Jansen' },
     { email = 'pm@ml4trading.io' }
 ]
-license = { file = "LICENSE" }
+license = "Apache-2.0"
 
 classifiers = [
     'Development Status :: 4 - Beta',
-    'License :: OSI Approved :: Apache Software License',
     'Natural Language :: English',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
+    'Programming Language :: Python :: 3.15',
     'Operating System :: OS Independent',
     'Intended Audience :: Science/Research',
     'Topic :: Office/Business :: Financial :: Investment',
@@ -33,9 +32,13 @@ classifiers = [
 
 dependencies = [
     # following pandas
-    "numpy>=1.23.5; python_version<'3.12'",
-    "numpy>=1.26.0; python_version>='3.12'",
-    "pandas >=1.5.0,<3.0",
+    "numpy>=1.23.5,<3; python_version<'3.12'",
+    "numpy>=1.26.0,<3; python_version>='3.12' and python_version<'3.14'",
+    "numpy>=2.3.3,<3; python_version>='3.14' and python_version<'3.15'",
+    "numpy>=2.5.4,<3; python_version>='3.15'",
+    "pandas>=1.5.0,<3; python_version<'3.14'",
+    "pandas>=2.3.3,<3; python_version>='3.14' and python_version<'3.15'",
+    "pandas>=3.0.6,<3.1; python_version>='3.15'",
     "ipython >=3.2.3",
     "matplotlib >=1.4.0",
     "pytz >=2014.10",
@@ -52,18 +55,16 @@ documentation = 'https://pyfolio.ml4trading.io'
 
 [build-system]
 requires = [
-    'setuptools>=54.0.0',
-    "setuptools_scm[toml]>=6.2",
-    'wheel>=0.31.0',
-    'oldest-supported-numpy; python_version>="3.8"',
+    'setuptools>=77.0.3',
+    "setuptools-scm>=8.0.4",
 ]
 build-backend = 'setuptools.build_meta'
 
 [project.optional-dependencies]
 test = [
     "tox >=2.3.1",
-    "coverage >=4.0.3",
-    "coveralls ==3.0.1",
+    "coverage >=7.16.2",
+    "coveralls >=4.1.0",
     "pytest >=6.2",
     'pytest-xdist >=2.5.0',
     "pytest-cov >=2.12",
@@ -111,6 +112,7 @@ addopts = '-v'
 
 
 [tool.cibuildwheel]
+build = ["cp311-*", "cp312-*", "cp313-*", "cp314-*", "cp315-*"]
 test-extras = "test"
 test-command = "pytest -n 2 {package}/tests"
 build-verbosity = 3
@@ -128,7 +130,7 @@ skip = "*musllinux*"
 
 [tool.black]
 line-length = 88
-target-version = ['py38', 'py39', 'py310']
+target-version = ['py311']
 include = '\.pyi?$'
 extend-exclude = '''
 \(
@@ -141,13 +143,14 @@ legacy_tox_ini = """
 [tox]
 
 envlist =
-    py310-pandas{15,20,21,22}-numpy1
     py311-pandas{15,20,21,22}-numpy1
     py312-pandas{21,22}-numpy1
-    py310-pandas222-numpy2{0,1,2}
     py311-pandas222-numpy2{0,1,2}
     py312-pandas222-numpy2{0,1,2}
     py313-pandas222-numpy2{1,2}
+    py314-pandas233-numpy233
+    py314-pandas233-numpylatest
+    py315-pandas30-numpylatest
 
 isolated_build = True
 skip_missing_interpreters = True
@@ -155,10 +158,11 @@ minversion = 3.23.0
 
 [gh-actions]
 python =
-    3.10: py310
     3.11: py311
     3.12: py312
     3.13: py313
+    3.14: py314
+    3.15: py315
 
 [testenv]
 usedevelop = True
@@ -173,10 +177,14 @@ deps =
     pandas21: pandas>=2.1,<2.2
     pandas22: pandas>=2.2,<2.3
     pandas222: pandas>=2.2.2,<2.3
+    pandas233: pandas>=2.3.3,<3
+    pandas30: pandas>=3.0.6,<3.1
     numpy1: numpy>=1.23.5,<2.0
     numpy20: numpy>=2.0,<2.1
     numpy21: numpy>=2.1,<2.2
     numpy22: numpy>=2.2,<2.3
+    numpy233: numpy==2.3.3
+    numpylatest: numpy>=2.3.3,<3
 
 
 commands =

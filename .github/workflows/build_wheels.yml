@@ -11,9 +11,8 @@ on:
         options: [ 'TESTPYPI', 'PYPI' ]
       version:
         type: string
-        description: 'Version tag'
+        description: 'Existing release tag to build'
         required: true
-        default: '0.9.9'
 
 jobs:
   dist:
@@ -22,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        python-version: [ "3.12" ]
+        python-version: [ "3.11" ]
 
     steps:
       - name: Checkout pyfolio

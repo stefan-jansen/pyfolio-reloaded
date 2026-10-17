@@ -178,7 +178,7 @@ def get_turnover(positions, transactions, denominator="AGB"):
     """
 
     txn_vol = get_txn_vol(transactions)
-    traded_value = txn_vol.txn_volume
+    traded_value = txn_vol.txn_volume.astype(float)
 
     if denominator == "AGB":
         # Actual gross book is the same thing as the algo's GMV
