@@ -1412,9 +1412,9 @@ def plot_return_quantiles(returns, live_start_date=None, ax=None, **kwargs):
         oos_monthly = ep.aggregate_returns(oos_returns, "monthly")
 
         sns.swarmplot(
-            data=[oos_returns, oos_weekly, oos_monthly],
+            data=[oos_returns.values, oos_weekly.values, oos_monthly.values],
             ax=ax,
-            palette="dark:red",
+            color="red",
             marker="d",
             **kwargs,
         )
@@ -1427,6 +1427,7 @@ def plot_return_quantiles(returns, live_start_date=None, ax=None, **kwargs):
             linestyle="",
         )
         ax.legend(handles=[red_dots], frameon=True, framealpha=0.5)
+    ax.set_xticks([0, 1, 2])
     ax.set_xticklabels(["Daily", "Weekly", "Monthly"])
     ax.set_title("Return quantiles")
 

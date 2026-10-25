@@ -52,11 +52,15 @@ In addition, it visualizes how several risk and return metrics behave over time:
 
 ## Installation
 
-This source version targets Python 3.11-3.15. Python 3.9 and 3.10 are end of life
-and are retired from the next release. Existing release artifacts retain their
+Pyfolio 0.10.0 and this source version support Python 3.11-3.15. Python 3.9 and 3.10
+are retired. Existing release artifacts retain their
 original Python requirements. See the [Python support schedule](https://devguide.python.org/versions/).
 
-Python 3.14 requires pandas 2.3.3 and NumPy 2.3.3 or newer. Python 3.15 requires
+The next compatibility release adds pandas 3.0 on Python 3.11-3.14, alongside
+the existing pandas 1.5/2.x combinations. Pandas 3.1 and later are not yet qualified.
+Published 0.10.0 permits pandas 3.0 only on Python 3.15.
+
+Python 3.14 requires pandas 2.3.3 or newer and NumPy 2.3.3 or newer. Python 3.15 requires
 pandas 3.0.6 and NumPy 2.5.4 or newer; pandas 2.3.3 crashes during date-range
 construction in the stable CPython 3.15 Linux qualification. The dependency markers
 select the appropriate combination. Bottleneck currently builds from source on

@@ -36,8 +36,8 @@ dependencies = [
     "numpy>=1.26.0,<3; python_version>='3.12' and python_version<'3.14'",
     "numpy>=2.3.3,<3; python_version>='3.14' and python_version<'3.15'",
     "numpy>=2.5.4,<3; python_version>='3.15'",
-    "pandas>=1.5.0,<3; python_version<'3.14'",
-    "pandas>=2.3.3,<3; python_version>='3.14' and python_version<'3.15'",
+    "pandas>=1.5.0,<3.1; python_version<'3.14'",
+    "pandas>=2.3.3,<3.1; python_version>='3.14' and python_version<'3.15'",
     "pandas>=3.0.6,<3.1; python_version>='3.15'",
     "ipython >=3.2.3",
     "matplotlib >=1.4.0",
@@ -70,6 +70,9 @@ test = [
     "pytest-cov >=2.12",
     "parameterized >=0.6.1",
     "pytest-rerunfailures",
+    "nbclient",
+    "nbformat",
+    "ipykernel",
     "flake8 >=3.9.1",
     "black",
 ]
@@ -150,6 +153,8 @@ envlist =
     py313-pandas222-numpy2{1,2}
     py314-pandas233-numpy233
     py314-pandas233-numpylatest
+    py{311,312,313,314}-pandas30-numpylatest
+    py311-pandas300-numpy126
     py315-pandas30-numpylatest
 
 isolated_build = True
@@ -178,7 +183,9 @@ deps =
     pandas22: pandas>=2.2,<2.3
     pandas222: pandas>=2.2.2,<2.3
     pandas233: pandas>=2.3.3,<3
-    pandas30: pandas>=3.0.6,<3.1
+    pandas30: pandas>=3.0,<3.1
+    pandas300: pandas==3.0.0
+    numpy126: numpy>=1.26,<1.27
     numpy1: numpy>=1.23.5,<2.0
     numpy20: numpy>=2.0,<2.1
     numpy21: numpy>=2.1,<2.2

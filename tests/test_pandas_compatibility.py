@@ -1,4 +1,5 @@
 import warnings
+from contextlib import nullcontext
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,7 +36,12 @@ def test_intraday_first_day_preserves_capital_with_copy_on_write():
         {"symbol": ["A"], "amount": [10.0], "price": [10.0]},
         index=[dates[0] + pd.Timedelta(hours=12)],
     )
-    with pd.option_context("mode.copy_on_write", True):
+    context = (
+        pd.option_context("mode.copy_on_write", True)
+        if int(pd.__version__.split(".")[0]) < 3
+        else nullcontext()
+    )
+    with context:
         actual = utils.estimate_intraday(returns, positions, transactions)
     assert actual.loc[dates[0], "cash"] == 900.0
     assert actual.loc[dates[0], "A"] == 100.0
@@ -55,3 +61,27 @@ def test_live_cone_uses_last_in_sample_value_without_positional_fallback():
         )
     assert len(ax.collections) == 2
     ax.figure.canvas.draw()
+
+
+def test_live_return_quantiles_match_the_red_legend_without_ignored_palette():
+    returns = pd.Series(
+        np.random.default_rng(42).normal(0.001, 0.01, 100),
+        pd.bdate_range("2020-01-01", periods=100),
+    )
+    with warnings.catch_warnings():
+        warnings.filterwarnings("error", message="Ignoring `palette`")
+        warnings.filterwarnings("error", message="set_ticklabels\\(\\) should only")
+        ax = plotting.plot_return_quantiles(returns, live_start_date=returns.index[80])
+        ax.figure.canvas.draw()
+    assert [label.get_text() for label in ax.get_xticklabels()] == [
+        "Daily",
+        "Weekly",
+        "Monthly",
+    ]
+    assert [len(collection.get_offsets()) for collection in ax.collections] == [
+        20,
+        5,
+        2,
+    ]
+    for collection in ax.collections:
+        assert np.allclose(collection.get_facecolors()[:, :3], [1.0, 0.0, 0.0])
