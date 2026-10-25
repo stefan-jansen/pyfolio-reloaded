@@ -1411,22 +1411,24 @@ def plot_return_quantiles(returns, live_start_date=None, ax=None, **kwargs):
         oos_weekly = ep.aggregate_returns(oos_returns, "weekly")
         oos_monthly = ep.aggregate_returns(oos_returns, "monthly")
 
+        live_color = kwargs.pop("color", "red")
         sns.swarmplot(
-            data=[oos_returns, oos_weekly, oos_monthly],
+            data=[oos_returns.values, oos_weekly.values, oos_monthly.values],
             ax=ax,
-            palette="dark:red",
+            color=live_color,
             marker="d",
             **kwargs,
         )
         red_dots = matplotlib.lines.Line2D(
             [],
             [],
-            color="red",
+            color=live_color,
             marker="d",
             label="Out-of-sample data",
             linestyle="",
         )
         ax.legend(handles=[red_dots], frameon=True, framealpha=0.5)
+    ax.set_xticks([0, 1, 2])
     ax.set_xticklabels(["Daily", "Weekly", "Monthly"])
     ax.set_title("Return quantiles")
 
@@ -1999,6 +2001,7 @@ def plot_prob_profit_trade(round_trips, ax=None):
     ax.set_ylabel("Belief")
     ax.set_xlim(lower_plot, upper_plot)
     ax.set_ylim((0, y.max() + 1.0))
+    ax.locator_params(axis="x", nbins=5)
 
     return ax
 

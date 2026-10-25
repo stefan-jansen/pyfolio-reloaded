@@ -180,7 +180,11 @@ def extract_rets_pos_txn_from_zipline(backtest):
     if not raw_positions:
         raise ValueError("The backtest does not have any positions.")
     positions = pd.concat(raw_positions)
-    positions = pos.extract_pos(positions, backtest.ending_cash)
+    if positions.empty:
+        positions = backtest.ending_cash.to_frame("cash")
+        positions.columns.name = "sid"
+    else:
+        positions = pos.extract_pos(positions, backtest.ending_cash)
     transactions = txn.make_transaction_frame(backtest.transactions)
     if transactions.index.tzinfo is None:
         transactions.index = transactions.index.tz_localize("utc")
@@ -529,9 +533,9 @@ def configure_legend(
 
     # make legend order match graph lines
     handles, labels = ax.get_legend_handles_labels()
-    handles_and_labels_sorted = sorted(
-        zip(handles, labels), key=lambda x: x[0].get_ydata()[-1], reverse=True
-    )
+    handles_and_labels_sorted = list(zip(handles, labels))
+    if all(hasattr(handle, "get_ydata") for handle, _ in handles_and_labels_sorted):
+        handles_and_labels_sorted.sort(key=lambda x: x[0].get_ydata()[-1], reverse=True)
 
     handles_sorted = [h[0] for h in handles_and_labels_sorted]
     labels_sorted = [h[1] for h in handles_and_labels_sorted]
@@ -540,15 +544,16 @@ def configure_legend(
         for handle, color in zip(handles_sorted, cycle(COLORS)):
             handle.set_color(color)
 
-    ax.legend(
-        handles=handles_sorted,
-        labels=labels_sorted,
-        frameon=True,
-        framealpha=0.5,
-        loc="upper left",
-        bbox_to_anchor=(1.05, 1),
-        fontsize="small",
-    )
+    if handles_sorted:
+        ax.legend(
+            handles=handles_sorted,
+            labels=labels_sorted,
+            frameon=True,
+            framealpha=0.5,
+            loc="upper left",
+            bbox_to_anchor=(1.05, 1),
+            fontsize="small",
+        )
 
     # manually rotate xticklabels instead of using matplotlib's autofmt_xdate
     # because it disables xticklabels for all but the last plot

@@ -52,11 +52,23 @@ In addition, it visualizes how several risk and return metrics behave over time:
 
 ## Installation
 
-This source version targets Python 3.11-3.15. Python 3.9 and 3.10 are end of life
-and are retired from the next release. Existing release artifacts retain their
+Pyfolio 0.10.0 and this source version support Python 3.11-3.15. Python 3.9 and 3.10
+are retired. Existing release artifacts retain their
 original Python requirements. See the [Python support schedule](https://devguide.python.org/versions/).
 
-Python 3.14 requires pandas 2.3.3 and NumPy 2.3.3 or newer. Python 3.15 requires
+This source version supports pandas 3.0 and 3.1 on Python 3.11-3.15, alongside
+the existing pandas 1.5/2.x combinations where supported by the interpreter.
+Pandas 3.2 and later are not yet qualified.
+Published 0.10.0 permits pandas 3.0 only on Python 3.15.
+
+Pandas 3.1 requires NumPy 2.0.2 or newer on Python 3.11-3.13. The dependency
+resolver applies its requirements alongside the Python-specific floors below.
+
+When sharing an environment with Zipline, its dependency constraints also apply.
+Zipline Reloaded 3.2.0 requires pandas below 3.0; use a compatible pandas 2.x
+environment for that integration. Pyfolio itself does not require Zipline.
+
+Python 3.14 requires pandas 2.3.3 or newer and NumPy 2.3.3 or newer. Python 3.15 requires
 pandas 3.0.6 and NumPy 2.5.4 or newer; pandas 2.3.3 crashes during date-range
 construction in the stable CPython 3.15 Linux qualification. The dependency markers
 select the appropriate combination. Bottleneck currently builds from source on

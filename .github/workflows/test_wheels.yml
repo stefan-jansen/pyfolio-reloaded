@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -106,13 +106,35 @@ jobs:
               with tarfile.open(next(Path(folder).glob("*.tar.gz"))) as sdist:
                   assert not any(".ipynb_checkpoints" in name for name in sdist.getnames())
 
+      - name: Upload qualification distributions
+        uses: actions/upload-artifact@v7
+        with:
+          name: distributions-${{ matrix.os }}-${{ matrix.python-version }}
+          path: dist/*
+          if-no-files-found: error
+
+      - name: Download qualification distributions
+        uses: actions/download-artifact@v8
+        with:
+          name: distributions-${{ matrix.os }}-${{ matrix.python-version }}
+          path: roundtrip-dist
+
+      - name: Verify artifact roundtrip identity
+        shell: python
+        run: |
+          import hashlib
+          from pathlib import Path
+          expected = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in Path("dist").iterdir()}
+          actual = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in Path("roundtrip-dist").iterdir()}
+          assert expected == actual, (expected, actual)
+
       - name: Install the built wheel with declared test dependencies
         shell: python
         run: |
           from pathlib import Path
           import subprocess
           import sys
-          wheel = next(Path("dist").glob("*.whl")).resolve()
+          wheel = next(Path("roundtrip-dist").glob("*.whl")).resolve()
           subprocess.check_call([sys.executable, "-m", "pip", "install", f"{wheel}[test]"])
 
       - name: Test installed wheel outside the source tree
@@ -129,7 +151,7 @@ jobs:
           scratch = Path(os.environ["RUNNER_TEMP"]) / "pyfolio-wheel-tests"
           unpacked = scratch / "sdist"
           unpacked.mkdir(parents=True)
-          with tarfile.open(next(Path("dist").glob("*.tar.gz"))) as bundle:
+          with tarfile.open(next(Path("roundtrip-dist").glob("*.tar.gz"))) as bundle:
               bundle.extractall(unpacked, filter="data")
           packaged = next(unpacked.iterdir())
           shutil.copytree(packaged / "tests", scratch / "tests")
@@ -141,6 +163,22 @@ jobs:
           subprocess.check_call([
               sys.executable, "-I", "-m", "pytest", "-n", "2",
               "--cov=pyfolio", "--cov-report=term", "--tb=short", "tests",
+          ], cwd=scratch)
+
+      - name: Execute original offline notebooks with the installed package
+        if: matrix.python-version == '3.11' || matrix.python-version == '3.15'
+        shell: python
+        env:
+          MPLBACKEND: Agg
+        run: |
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          scratch = Path(os.environ["RUNNER_TEMP"]) / "pyfolio-wheel-tests"
+          subprocess.check_call([
+              sys.executable, "-I", str(scratch / "tests" / "check_notebooks.py"),
+              "--output", str(scratch / "notebook-results"),
           ], cwd=scratch)
 
       - name: Smoke test the minimum-backend wheel version API
