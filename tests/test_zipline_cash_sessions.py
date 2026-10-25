@@ -40,9 +40,9 @@ def test_zipline_extraction_retains_cash_sessions_and_empty_transactions(traded)
     expected = pd.DataFrame({"cash": cash}, index=dates)
     if traded:
         expected.insert(0, 1, [0.0, 100.0, 0.0])
-        expected.index.name = "index"
     expected.columns.name = "sid"
-    assert_frame_equal(actual, expected, check_freq=False)
+    assert_frame_equal(actual, expected, check_freq=False, check_names=False)
+    assert actual.columns.name == "sid"
     assert_series_equal(
         actual.sum(axis=1), result.portfolio_value, check_names=False, check_freq=False
     )

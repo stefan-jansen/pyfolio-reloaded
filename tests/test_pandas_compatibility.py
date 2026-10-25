@@ -1,12 +1,13 @@
 import warnings
 from contextlib import nullcontext
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pytest
 
-from pyfolio import plotting, utils
+from pyfolio import plotting, tears, utils
 
 
 @pytest.fixture(autouse=True)
@@ -85,3 +86,40 @@ def test_live_return_quantiles_match_the_red_legend_without_ignored_palette():
     ]
     for collection in ax.collections:
         assert np.allclose(collection.get_facecolors()[:, :3], [1.0, 0.0, 0.0])
+
+
+def test_round_trip_notebook_probability_and_pnl_ticks_do_not_overlap():
+    data = Path(__file__).parent / "test_data"
+    returns = utils.to_series(
+        utils.to_utc(
+            pd.read_csv(data / "test_returns.csv.gz", index_col=0, parse_dates=True)
+        )
+    )
+    positions = utils.to_utc(
+        pd.read_csv(data / "test_pos.csv.gz", index_col=0, parse_dates=True)
+    )
+    transactions = utils.to_utc(
+        pd.read_csv(data / "test_txn.csv.gz", index_col=0, parse_dates=True)
+    )
+    figure = tears.create_round_trip_tear_sheet(
+        returns, positions, transactions, return_fig=True
+    )
+    figure.canvas.draw()
+    selected = [
+        axis
+        for axis in figure.axes
+        if axis.get_xlabel()
+        in [
+            "Probability of making a profitable decision",
+            "PnL per round-trip trade in $",
+        ]
+    ]
+    assert len(selected) == 2
+    for axis in selected:
+        lower, upper = axis.get_xlim()
+        boxes = [
+            label.get_window_extent(figure.canvas.get_renderer())
+            for location, label in zip(axis.get_xticks(), axis.get_xticklabels())
+            if lower <= location <= upper
+        ]
+        assert all(left.x1 <= right.x0 for left, right in zip(boxes, boxes[1:]))

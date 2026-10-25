@@ -2000,6 +2000,7 @@ def plot_prob_profit_trade(round_trips, ax=None):
     ax.set_ylabel("Belief")
     ax.set_xlim(lower_plot, upper_plot)
     ax.set_ylim((0, y.max() + 1.0))
+    ax.locator_params(axis="x", nbins=5)
 
     return ax
 

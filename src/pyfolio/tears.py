@@ -969,6 +969,7 @@ def create_round_trip_tear_sheet(
 
     sns.histplot(trades.pnl, ax=ax_pnl_per_round_trip_dollars)
     ax_pnl_per_round_trip_dollars.set(xlabel="PnL per round-trip trade in $")
+    ax_pnl_per_round_trip_dollars.locator_params(axis="x", nbins=5)
 
     sns.histplot(trades.returns.dropna() * 100, ax=ax_pnl_per_round_trip_pct)
     ax_pnl_per_round_trip_pct.set(xlabel="Round-trip returns in %")
