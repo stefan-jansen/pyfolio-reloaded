@@ -3,6 +3,7 @@ from contextlib import nullcontext
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib.colors import to_rgb
 import numpy as np
 import pandas as pd
 import pytest
@@ -64,7 +65,8 @@ def test_live_cone_uses_last_in_sample_value_without_positional_fallback():
     ax.figure.canvas.draw()
 
 
-def test_live_return_quantiles_match_the_red_legend_without_ignored_palette():
+@pytest.mark.parametrize("color", [None, "orange"])
+def test_live_return_quantiles_preserve_points_and_requested_color(color):
     returns = pd.Series(
         np.random.default_rng(42).normal(0.001, 0.01, 100),
         pd.bdate_range("2020-01-01", periods=100),
@@ -72,7 +74,10 @@ def test_live_return_quantiles_match_the_red_legend_without_ignored_palette():
     with warnings.catch_warnings():
         warnings.filterwarnings("error", message="Ignoring `palette`")
         warnings.filterwarnings("error", message="set_ticklabels\\(\\) should only")
-        ax = plotting.plot_return_quantiles(returns, live_start_date=returns.index[80])
+        kwargs = {} if color is None else {"color": color}
+        ax = plotting.plot_return_quantiles(
+            returns, live_start_date=returns.index[80], **kwargs
+        )
         ax.figure.canvas.draw()
     assert [label.get_text() for label in ax.get_xticklabels()] == [
         "Daily",
@@ -84,8 +89,10 @@ def test_live_return_quantiles_match_the_red_legend_without_ignored_palette():
         5,
         2,
     ]
+    expected_color = to_rgb("red" if color is None else color)
     for collection in ax.collections:
-        assert np.allclose(collection.get_facecolors()[:, :3], [1.0, 0.0, 0.0])
+        assert np.allclose(collection.get_facecolors()[:, :3], expected_color)
+    assert to_rgb(ax.get_legend().get_lines()[0].get_color()) == expected_color
 
 
 def test_round_trip_notebook_probability_and_pnl_ticks_do_not_overlap():

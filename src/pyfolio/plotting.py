@@ -1411,17 +1411,18 @@ def plot_return_quantiles(returns, live_start_date=None, ax=None, **kwargs):
         oos_weekly = ep.aggregate_returns(oos_returns, "weekly")
         oos_monthly = ep.aggregate_returns(oos_returns, "monthly")
 
+        live_color = kwargs.pop("color", "red")
         sns.swarmplot(
             data=[oos_returns.values, oos_weekly.values, oos_monthly.values],
             ax=ax,
-            color="red",
+            color=live_color,
             marker="d",
             **kwargs,
         )
         red_dots = matplotlib.lines.Line2D(
             [],
             [],
-            color="red",
+            color=live_color,
             marker="d",
             label="Out-of-sample data",
             linestyle="",
