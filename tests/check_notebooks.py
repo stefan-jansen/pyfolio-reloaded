@@ -54,8 +54,6 @@ def main() -> None:
                 ),
             )
             client = NotebookClient(notebook, timeout=300, kernel_name="python3")
-            client.km = client.create_kernel_manager()
-            client.km.transport = "ipc"
             client.execute(cwd=str(work))
             images = [
                 result["data"]["image/png"]
