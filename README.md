@@ -56,9 +56,13 @@ Pyfolio 0.10.0 and this source version support Python 3.11-3.15. Python 3.9 and 
 are retired. Existing release artifacts retain their
 original Python requirements. See the [Python support schedule](https://devguide.python.org/versions/).
 
-The next compatibility release adds pandas 3.0 on Python 3.11-3.14, alongside
-the existing pandas 1.5/2.x combinations. Pandas 3.1 and later are not yet qualified.
+This source version supports pandas 3.0 and 3.1 on Python 3.11-3.15, alongside
+the existing pandas 1.5/2.x combinations where supported by the interpreter.
+Pandas 3.2 and later are not yet qualified.
 Published 0.10.0 permits pandas 3.0 only on Python 3.15.
+
+Pandas 3.1 requires NumPy 2.0.2 or newer on Python 3.11-3.13. The dependency
+resolver applies its requirements alongside the Python-specific floors below.
 
 When sharing an environment with Zipline, its dependency constraints also apply.
 Zipline Reloaded 3.2.0 requires pandas below 3.0; use a compatible pandas 2.x
