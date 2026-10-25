@@ -144,7 +144,7 @@ def extract_pos(positions, cash):
             if type(asset) in [Equity, Future]:
                 values[asset] = values[asset] * asset.price_multiplier
 
-    values = values.join(cash).fillna(0)
+    values = values.join(cash, how="outer").fillna(0)
 
     # NOTE: Set name of DataFrame.columns to sid, to match the behavior
     # of DataFrame.join in earlier versions of pandas.

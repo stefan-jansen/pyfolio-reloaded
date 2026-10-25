@@ -180,7 +180,11 @@ def extract_rets_pos_txn_from_zipline(backtest):
     if not raw_positions:
         raise ValueError("The backtest does not have any positions.")
     positions = pd.concat(raw_positions)
-    positions = pos.extract_pos(positions, backtest.ending_cash)
+    if positions.empty:
+        positions = backtest.ending_cash.to_frame("cash")
+        positions.columns.name = "sid"
+    else:
+        positions = pos.extract_pos(positions, backtest.ending_cash)
     transactions = txn.make_transaction_frame(backtest.transactions)
     if transactions.index.tzinfo is None:
         transactions.index = transactions.index.tz_localize("utc")

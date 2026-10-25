@@ -73,10 +73,13 @@ def make_transaction_frame(transactions):
         for txn in txns:
             txn = map_transaction(txn)
             transaction_list.append(txn)
-    df = pd.DataFrame(sorted(transaction_list, key=lambda x: x["dt"]))
+    df = pd.DataFrame(
+        sorted(transaction_list, key=lambda x: x["dt"]),
+        columns=["sid", "symbol", "price", "order_id", "amount", "commission", "dt"],
+    )
     df["txn_dollars"] = -df["amount"] * df["price"]
 
-    df.index = list(map(pd.Timestamp, df.dt.values))
+    df.index = pd.DatetimeIndex(list(map(pd.Timestamp, df.dt.values)))
     return df
 
 
