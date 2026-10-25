@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from pyfolio import plotting, tears, utils
+from pyfolio import perf_attrib, plotting, tears, utils
 
 
 @pytest.fixture(autouse=True)
@@ -130,3 +130,64 @@ def test_round_trip_notebook_probability_and_pnl_ticks_do_not_overlap():
             if lower <= location <= upper
         ]
         assert all(left.x1 <= right.x0 for left, right in zip(boxes, boxes[1:]))
+
+
+@pytest.mark.parametrize("partitioned", [False, True])
+def test_attribution_tear_sheet_formats_percentages_without_changing_returns(
+    partitioned,
+):
+    data = Path(__file__).parent / "test_data"
+    positions = pd.read_csv(data / "positions.csv", index_col=0, parse_dates=True)
+    positions.columns = [int(c) if c != "cash" else c for c in positions.columns]
+    returns = (
+        pd.read_csv(
+            data / "returns.csv", index_col=0, parse_dates=True, header=None
+        ).squeeze()
+        / 100
+    )
+    factors = (
+        pd.read_csv(data / "factor_returns.csv", index_col=0, parse_dates=True) / 100
+    )
+    loadings = pd.read_csv(
+        data / "factor_loadings.csv", index_col=[0, 1], parse_dates=[0]
+    )
+    names = {"materials": "basic_materials", "financials": "financial_services"}
+    factors = factors.rename(columns=names)
+    loadings = loadings.rename(columns=names)
+    expected_returns = returns.copy()
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "error", message="Setting an item of incompatible dtype"
+        )
+        figure = tears.create_perf_attrib_tear_sheet(
+            returns,
+            positions,
+            factors,
+            loadings,
+            return_fig=True,
+            **({} if partitioned else {"factor_partitions": None}),
+        )
+        figure.canvas.draw()
+    assert len(figure.axes) == (5 if partitioned else 3)
+    legends = [axis.get_legend() for axis in figure.axes[1:] if axis.get_legend()]
+    assert len(legends) == 2
+    for legend in legends:
+        assert set(factors.columns) <= {text.get_text() for text in legend.get_texts()}
+    pd.testing.assert_series_equal(returns, expected_returns)
+    exposures, attribution = perf_attrib.perf_attrib(
+        returns, positions, factors, loadings
+    )
+    np.testing.assert_allclose(exposures, 1)
+    np.testing.assert_allclose(attribution.common_returns, expected_returns)
+    np.testing.assert_allclose(attribution.specific_returns, 0, atol=1e-11)
+
+
+def test_alpha_return_histogram_renders_its_patch_and_reference_line_legend():
+    alpha_returns = pd.Series(np.linspace(-0.03, 0.03, 30))
+    axis = perf_attrib.plot_alpha_returns(alpha_returns)
+    axis.figure.canvas.draw()
+    labels = {text.get_text() for text in axis.get_legend().get_texts()}
+    assert "Multi-factor alpha" in labels
+    assert "Zero" in labels
+    assert any(label.startswith("Mean =") for label in labels)
+    assert len(axis.patches) > 0

@@ -318,7 +318,7 @@ def show_perf_attrib_stats(
             "Annualized Total Return",
             "Specific Sharpe Ratio",
         ]
-    ]
+    ].astype(object)
 
     # Format return rows in summary stats table as percentages.
     for col_name in (
@@ -489,7 +489,7 @@ def plot_factor_contribution_to_perf(
         factors_cumulative[factor] = ep.cum_returns(factors_to_plot[factor])
 
     for col in factors_cumulative:
-        ax.plot(factors_cumulative[col])
+        ax.plot(factors_cumulative[col], label=col)
 
     ax.axhline(0, color="k")
     configure_legend(ax, change_colors=True)
@@ -525,7 +525,7 @@ def plot_risk_exposures(exposures, ax=None, title="Daily risk factor exposures")
         ax = plt.gca()
 
     for col in exposures:
-        ax.plot(exposures[col])
+        ax.plot(exposures[col], label=col)
 
     configure_legend(ax, change_colors=True)
     ax.set_ylabel("Factor exposures")
