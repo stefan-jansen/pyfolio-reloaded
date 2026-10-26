@@ -7,61 +7,12 @@
   "build_manifest_sha256": "b57eb4aeaa1eb35ea2a0e6d4c341a7a1b4ad5b77c54cc93dd6724c3b06752d80",
   "migration_guide": "https://www.ml4trading.io/docs/diagnostic/user-guide/migration/#pyfolio-portfolio-and-performance-analysis",
   "documentation_only_overrides": {
-    "html_theme_options": {
-      "github_url": "https://github.com/stefan-jansen/pyfolio-reloaded",
-      "twitter_url": "https://twitter.com/ml4trading",
-      "external_links": [
-        {
-          "name": "ML for Trading",
-          "url": "https://ml4trading.io"
-        },
-        {
-          "name": "Community",
-          "url": "https://exchange.ml4trading.io"
-        },
-        {
-          "name": "Migration to Diagnostic",
-          "url": "https://www.ml4trading.io/docs/diagnostic/user-guide/migration/#pyfolio-portfolio-and-performance-analysis"
-        }
-      ],
-      "use_edit_page_button": true,
-      "icon_links": [
-        {
-          "url": "https://github.com/stefan-jansen/pyfolio-reloaded",
-          "icon": "fa-brands fa-square-github",
-          "name": "GitHub",
-          "type": "fontawesome"
-        },
-        {
-          "url": "https://twitter.com/ml4trading",
-          "icon": "fa-brands fa-square-twitter",
-          "name": "Twitter",
-          "type": "fontawesome"
-        }
-      ],
-      "logo": {
-        "image_relative": {}
-      }
-    },
-    "html_context": {
-      "github_url": "https://github.com",
-      "github_user": "stefan-jansen",
-      "github_repo": "pyfolio-reloaded",
-      "github_version": "0.10.1",
-      "doc_path": "docs/source",
-      "copybutton_prompt_text": "",
-      "copybutton_prompt_is_regexp": false,
-      "copybutton_only_copy_prompt_lines": true,
-      "copybutton_remove_prompts": true,
-      "copybutton_copy_empty_lines": true,
-      "copybutton_line_continuation_character": "",
-      "copybutton_here_doc_delimiter": "",
-      "copybutton_image_svg": "",
-      "copybutton_selector": "div.highlight pre",
-      "copybutton_format_func": "function escapeRegExp(string) {\n    return string.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&'); // $& means the whole matched string\n}\n\n/**\n * Removes excluded text from a Node.\n *\n * @param {Node} target Node to filter.\n * @param {string} exclude CSS selector of nodes to exclude.\n * @returns {DOMString} Text from `target` with text removed.\n */\nfunction filterText(target, exclude) {\n    const clone = target.cloneNode(true);  // clone as to not modify the live DOM\n    if (exclude) {\n        // remove excluded nodes\n        clone.querySelectorAll(exclude).forEach(node => node.remove());\n    }\n    return clone.innerText;\n}\n\n// Callback when a copy button is clicked. Will be passed the node that was clicked\n// should then grab the text and replace pieces of text that shouldn't be used in output\nfunction formatCopyText(textContent, copybuttonPromptText, isRegexp = false, onlyCopyPromptLines = true, removePrompts = true, copyEmptyLines = true, lineContinuationChar = \"\", hereDocDelim = \"\") {\n    var regexp;\n    var match;\n\n    // Do we check for line continuation characters and \"HERE-documents\"?\n    var useLineCont = !!lineContinuationChar\n    var useHereDoc = !!hereDocDelim\n\n    // create regexp to capture prompt and remaining line\n    if (isRegexp) {\n        regexp = new RegExp('^(' + copybuttonPromptText + ')(.*)')\n    } else {\n        regexp = new RegExp('^(' + escapeRegExp(copybuttonPromptText) + ')(.*)')\n    }\n\n    const outputLines = [];\n    var promptFound = false;\n    var gotLineCont = false;\n    var gotHereDoc = false;\n    const lineGotPrompt = [];\n    for (const line of textContent.split('\\n')) {\n        match = line.match(regexp)\n        if (match || gotLineCont || gotHereDoc) {\n            promptFound = regexp.test(line)\n            lineGotPrompt.push(promptFound)\n            if (removePrompts && promptFound) {\n                outputLines.push(match[2])\n            } else {\n                outputLines.push(line)\n            }\n            gotLineCont = line.endsWith(lineContinuationChar) & useLineCont\n            if (line.includes(hereDocDelim) & useHereDoc)\n                gotHereDoc = !gotHereDoc\n        } else if (!onlyCopyPromptLines) {\n            outputLines.push(line)\n        } else if (copyEmptyLines && line.trim() === '') {\n            outputLines.push(line)\n        }\n    }\n\n    // If no lines with the prompt were found then just use original lines\n    if (lineGotPrompt.some(v => v === true)) {\n        textContent = outputLines.join('\\n');\n    }\n\n    // Remove a trailing newline to avoid auto-running when pasting\n    if (textContent.endsWith(\"\\n\")) {\n        textContent = textContent.slice(0, -1)\n    }\n    return textContent\n}\n",
-      "copybutton_exclude": ".linenos"
-    },
-    "html_title": "Pyfolio Reloaded 0.10.1"
+    "html_title": "Pyfolio Reloaded 0.10.1",
+    "html_context.github_version": "0.10.1",
+    "navigation_link": {
+      "name": "Migration to Diagnostic",
+      "url": "https://www.ml4trading.io/docs/diagnostic/user-guide/migration/#pyfolio-portfolio-and-performance-analysis"
+    }
   },
   "legacy_routes_preserved_from": "0f3310e1463955920d6789a3167d13822edd1094",
   "asset_localization": {
