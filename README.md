@@ -11,12 +11,15 @@
 ![GitHub issues](https://img.shields.io/github/issues/stefan-jansen/pyfolio-reloaded)
 ![Twitter Follow](https://img.shields.io/twitter/follow/ml4trading?style=social)
 
-pyfolio is a Python library for performance and risk analysis of financial portfolios that works well with the [Zipline](https://zipline.ml4trading.io/) open source backtesting library.
+pyfolio is a Python library for performance and risk analysis of financial portfolios.
+It accepts returns, positions, and transactions from your own backtester, with optional
+integration for [Zipline](https://zipline.ml4trading.io/).
 
 ## Maintenance and new development
 
-We continue to maintain Pyfolio Reloaded for bug, security and compatibility fixes.
-Our new feature development focuses on the current [ML4T libraries](https://www.ml4trading.io/),
+Pyfolio Reloaded is in minimal maintenance. Further work is limited to critical bug fixes,
+security issues, and essential compatibility updates.
+All new feature development focuses on the current [ML4T libraries](https://www.ml4trading.io/libraries/),
 including [ML4T Diagnostic](https://github.com/ml4t/diagnostic).
 For new projects, we recommend evaluating Diagnostic through its
 [migration guide](https://www.ml4trading.io/docs/diagnostic/user-guide/migration/#pyfolio-portfolio-and-performance-analysis),
