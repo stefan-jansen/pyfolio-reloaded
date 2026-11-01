@@ -904,7 +904,8 @@ def get_max_drawdown_underwater(underwater):
     Returns
     -------
     peak : datetime
-        The maximum drawdown's peak.
+        The maximum drawdown's peak. When the drawdown begins with the first
+        return, the first observation labels the undated starting capital.
     valley : datetime
         The maximum drawdown's valley.
     recovery : datetime
@@ -980,13 +981,15 @@ def get_top_drawdowns(returns, top=10):
 
     drawdowns = []
     for _ in range(top):
+        if underwater.empty or underwater.min() == 0:
+            break
         peak, valley, recovery = get_max_drawdown_underwater(underwater)
         # A drawdown that began with the first return has no zero at its peak,
         # so its first point is part of the drawdown and is removed with it
         first = 1 if underwater.loc[peak] == 0 else 0
         # Slice out draw-down period
         if not pd.isnull(recovery):
-            underwater.drop(underwater[peak:recovery].index[first:-1], inplace=True)
+            underwater = underwater.drop(underwater[peak:recovery].index[first:-1])
         else:
             # drawdown has not ended yet
             underwater = underwater.loc[:peak]
@@ -994,8 +997,6 @@ def get_top_drawdowns(returns, top=10):
                 underwater = underwater.iloc[:-1]
 
         drawdowns.append((peak, valley, recovery))
-        if (len(returns) == 0) or (len(underwater) == 0) or (np.min(underwater) == 0):
-            break
 
     return drawdowns
 
