@@ -874,6 +874,20 @@ def calc_distribution_stats(x):
     )
 
 
+def _underwater(returns):
+    """
+    Drawdown from the running peak, counting the starting value as a peak.
+
+    Without the starting value, a loss on the first day is not part of any
+    drawdown, and a drawdown that begins on the first day is understated and
+    can be reported as recovered before the starting value is regained. This
+    matches ``empyrical.max_drawdown``.
+    """
+    df_cum = ep.cum_returns(returns, 1.0)
+    running_max = np.maximum(np.maximum.accumulate(df_cum), 1.0)
+    return df_cum / running_max - 1
+
+
 def get_max_drawdown_underwater(underwater):
     """
     Determines peak, valley, and recovery dates given an 'underwater'
@@ -890,7 +904,8 @@ def get_max_drawdown_underwater(underwater):
     Returns
     -------
     peak : datetime
-        The maximum drawdown's peak.
+        The maximum drawdown's peak. When the drawdown begins with the first
+        return, the first observation labels the undated starting capital.
     valley : datetime
         The maximum drawdown's valley.
     recovery : datetime
@@ -899,7 +914,13 @@ def get_max_drawdown_underwater(underwater):
 
     valley = underwater.idxmin()  # end of the period
     # Find first 0
-    peak = underwater[:valley][underwater[:valley] == 0].index[-1]
+    at_peak = underwater[:valley][underwater[:valley] == 0]
+    if len(at_peak):
+        peak = at_peak.index[-1]
+    else:
+        # The drawdown began with the first return, so its peak is the
+        # starting value, which has no date of its own. Report the first date.
+        peak = underwater.index[0]
     # Find last 0
     try:
         recovery = underwater[valley:][underwater[valley:] == 0].index[0]
@@ -929,9 +950,7 @@ def get_max_drawdown(returns):
     """
 
     returns = returns.copy()
-    df_cum = ep.cum_returns(returns, 1.0)
-    running_max = np.maximum.accumulate(df_cum)
-    underwater = df_cum / running_max - 1
+    underwater = _underwater(returns)
     return get_max_drawdown_underwater(underwater)
 
 
@@ -958,23 +977,26 @@ def get_top_drawdowns(returns, top=10):
         return []
 
     returns = returns.copy()
-    df_cum = ep.cum_returns(returns, 1.0)
-    running_max = np.maximum.accumulate(df_cum)
-    underwater = df_cum / running_max - 1
+    underwater = _underwater(returns)
 
     drawdowns = []
     for _ in range(top):
+        if underwater.empty or underwater.min() == 0:
+            break
         peak, valley, recovery = get_max_drawdown_underwater(underwater)
+        # A drawdown that began with the first return has no zero at its peak,
+        # so its first point is part of the drawdown and is removed with it
+        first = 1 if underwater.loc[peak] == 0 else 0
         # Slice out draw-down period
         if not pd.isnull(recovery):
-            underwater.drop(underwater[peak:recovery].index[1:-1], inplace=True)
+            underwater = underwater.drop(underwater[peak:recovery].index[first:-1])
         else:
             # drawdown has not ended yet
             underwater = underwater.loc[:peak]
+            if not first:
+                underwater = underwater.iloc[:-1]
 
         drawdowns.append((peak, valley, recovery))
-        if (len(returns) == 0) or (len(underwater) == 0) or (np.min(underwater) == 0):
-            break
 
     return drawdowns
 
@@ -997,7 +1019,7 @@ def gen_drawdown_table(returns, top=10):
         Information about top drawdowns.
     """
 
-    df_cum = ep.cum_returns(returns, 1.0)
+    underwater = _underwater(returns)
     drawdown_periods = get_top_drawdowns(returns, top=top)
     df_drawdowns = pd.DataFrame(
         index=list(range(top)),
@@ -1025,9 +1047,9 @@ def gen_drawdown_table(returns, top=10):
             df_drawdowns.loc[i, "Recovery date"] = recovery.to_pydatetime().strftime(
                 "%Y-%m-%d"
             )
-        df_drawdowns.loc[i, "Net drawdown in %"] = (
-            (df_cum.loc[peak] - df_cum.loc[valley]) / df_cum.loc[peak]
-        ) * 100
+        # The running peak at the valley is the value at the peak, or the
+        # starting value for a drawdown that began with the first return
+        df_drawdowns.loc[i, "Net drawdown in %"] = -underwater.loc[valley] * 100
 
     df_drawdowns["Peak date"] = pd.to_datetime(df_drawdowns["Peak date"])
     df_drawdowns["Valley date"] = pd.to_datetime(df_drawdowns["Valley date"])

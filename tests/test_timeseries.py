@@ -3,6 +3,7 @@ from unittest import TestCase, skipIf
 from parameterized import parameterized
 from numpy.testing import assert_allclose, assert_almost_equal
 from pandas.testing import assert_series_equal
+import empyrical as ep
 import numpy as np
 import pandas as pd
 
@@ -37,6 +38,42 @@ class TestDrawdown(TestCase):
         rets = px.pct_change()
         drawdowns = timeseries.gen_drawdown_table(rets, top=1)
         self.assertEqual(drawdowns.loc[0, "Net drawdown in %"], 25)
+
+    def test_drawdown_begins_with_first_return(self):
+        # The same prices as above, with the NaN of pct_change dropped, so the
+        # first return is the first loss. The starting value is the peak.
+        px = pd.Series(
+            np.array([100, 90, 75]) / 10.0,
+            index=pd.date_range("2000-1-3", periods=3, freq="D"),
+        )
+        rets = px.pct_change().dropna()
+        drawdowns = timeseries.gen_drawdown_table(rets, top=1)
+        assert_almost_equal(drawdowns.loc[0, "Net drawdown in %"], 25)
+        assert_almost_equal(
+            drawdowns.loc[0, "Net drawdown in %"],
+            -100 * ep.max_drawdown(rets),
+        )
+
+    def test_drawdown_from_first_return_recovers_at_starting_value(self):
+        idx = pd.bdate_range("2024-01-01", periods=6)
+        rets = pd.Series([-0.10, -0.10, 0.05, 0.05, 0.10, 0.02], index=idx)
+        # Value 0.9, 0.81, 0.8505, 0.893, 0.9823, 1.002: the starting value of 1
+        # is first regained on the last day
+        peak, valley, recovery = timeseries.get_max_drawdown(rets)
+        self.assertEqual(valley, idx[1])
+        self.assertEqual(recovery, idx[5])
+        drawdowns = timeseries.gen_drawdown_table(rets, top=2)
+        assert_almost_equal(drawdowns.loc[0, "Net drawdown in %"], 19)
+        self.assertEqual(drawdowns.loc[0, "Recovery date"], idx[5])
+        self.assertTrue(pd.isnull(drawdowns.loc[1, "Net drawdown in %"]))
+
+    def test_unrecovered_drawdown_from_first_return(self):
+        idx = pd.bdate_range("2024-01-01", periods=4)
+        rets = pd.Series([-0.10, 0.05, -0.20, 0.01], index=idx)
+        drawdowns = timeseries.get_top_drawdowns(rets, top=3)
+        self.assertEqual(len(drawdowns), 1)
+        self.assertEqual(drawdowns[0][1], idx[2])
+        self.assertTrue(pd.isnull(drawdowns[0][2]))
 
     drawdown_list = (
         np.array(
@@ -239,17 +276,11 @@ class TestDrawdown(TestCase):
             (
                 pd.Series(px_list_1, index=dt),
                 1,
-                [
-                    (
-                        pd.Timestamp("2000-01-03 00:00:00"),
-                        pd.Timestamp("2000-01-03 00:00:00"),
-                        pd.Timestamp("2000-01-03 00:00:00"),
-                    )
-                ],
+                [],
             )
         ]
     )
-    def test_top_drawdowns(self, returns, top, expected):
+    def test_top_drawdowns_without_losses(self, returns, top, expected):
         self.assertEqual(timeseries.get_top_drawdowns(returns, top=top), expected)
 
 

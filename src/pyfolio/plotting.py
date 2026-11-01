@@ -486,9 +486,7 @@ def plot_drawdown_underwater(returns, ax=None, **kwargs):
     y_axis_formatter = FuncFormatter(utils.percentage)
     ax.yaxis.set_major_formatter(FuncFormatter(y_axis_formatter))
 
-    df_cum_rets = ep.cum_returns(returns, starting_value=1.0)
-    running_max = np.maximum.accumulate(df_cum_rets)
-    underwater = -100 * ((running_max - df_cum_rets) / running_max)
+    underwater = 100 * timeseries._underwater(returns)
     underwater.plot(ax=ax, kind="area", color="salmon", alpha=0.7, **kwargs)
     ax.set_ylabel("Drawdown")
     ax.set_title("Underwater plot")
