@@ -1,36 +1,25 @@
 {
   "library": "pyfolio-reloaded",
-  "version": "0.10.1",
-  "tag": "0.10.1",
-  "commit": "91b73a04ea9414f0f9fff42edae48bcd693ddfbc",
-  "source_tree": "122e4060b3e390e51b60cdabef65b214963f3135",
-  "build_manifest_sha256": "b57eb4aeaa1eb35ea2a0e6d4c341a7a1b4ad5b77c54cc93dd6724c3b06752d80",
+  "version": "0.10.2",
+  "commit": "3892a05aa4963b4be86110d8258da5356576d944",
+  "source_tree": "02a761659dc22333561acd7106a614625873ed09",
+  "candidate_only": false,
+  "tag": "0.10.2",
+  "tag_object": "9dd704ea09cc47081ae39c61b6dd2d1f6f1bf209",
   "migration_guide": "https://www.ml4trading.io/docs/diagnostic/user-guide/migration/#pyfolio-portfolio-and-performance-analysis",
-  "documentation_only_overrides": {
-    "html_title": "Pyfolio Reloaded 0.10.1",
-    "html_context.github_version": "0.10.1",
-    "navigation_link": {
-      "name": "Migration to Diagnostic",
-      "url": "https://www.ml4trading.io/docs/diagnostic/user-guide/migration/#pyfolio-portfolio-and-performance-analysis"
+  "legacy_routes_preserved_from": "2fa423d6ff5161b55729481b03227108fa860c21",
+  "package_artifacts": {
+    "pyfolio_reloaded-0.10.2-py3-none-any.whl": {
+      "sha256": "6a099ed59483fe4d2cf9cfc73a71193dfa91efafb9f03dcaf01d6507de82e0de",
+      "bytes": 6219225,
+      "pypi_digest_matches": true,
+      "url": "https://files.pythonhosted.org/packages/13/c1/cfdded7d7f783b2e2d6967f575f536598e462477a25752eebe9ab92ab2a7/pyfolio_reloaded-0.10.2-py3-none-any.whl"
+    },
+    "pyfolio_reloaded-0.10.2.tar.gz": {
+      "sha256": "afad5b8b166a6fa32fbc598045dad793ea14f07bd06c03273d624a61425bccb1",
+      "bytes": 13223177,
+      "pypi_digest_matches": true,
+      "url": "https://files.pythonhosted.org/packages/9c/12/1eae44268d1db394bb12d1359126cd2b609978c77e0ff61e5842be2a1ab2/pyfolio_reloaded-0.10.2.tar.gz"
     }
-  },
-  "legacy_routes_preserved_from": "0f3310e1463955920d6789a3167d13822edd1094",
-  "asset_localization": {
-    "reason": "Browser QA showed three broken external Imgur illustrations.",
-    "retained_logo": {
-      "source": "/home/stefan/ml4t/libraries/pyfolio-reloaded/docs/source/assets/pyfolio-logo.png",
-      "sha256": "82b3e2f62b0480c157de1c642aa85e989a3db2410e15c7e407de466087d5e39b"
-    },
-    "original_notebook": {
-      "path": "src/pyfolio/examples/zipline_algo_example.ipynb",
-      "sha256": "ba68e3fd4580c6fc83ed93d0eab14f8a1978bdd4a4f42b8d7b7f713555af0a49",
-      "cell": 17,
-      "metrics_html_sha256": "db95a07d4557e3ed04da77aeb4b003636117b85a8f4f916e8e5a866679fe79a0"
-    },
-    "performance_image": {
-      "path": "_images/notebooks_zipline_algo_example_17_12.png",
-      "sha256": "6b5462890736942dc02bc325c3ba4b82cdce4e7c5444567887dfabffde42c56d"
-    },
-    "scope": "Deterministic documentation asset localization after native Sphinx rendering; release source and packaged notebook outputs unchanged."
   }
 }
