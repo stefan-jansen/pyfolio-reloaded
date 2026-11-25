@@ -15,10 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.3.3
+      - uses: astral-sh/setup-uv@v10.4.0
       - name: Install Pandoc
         run: |
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y pandoc
       - name: Build documentation
-        run: uv run --python 3.12 --extra docs make -C docs html SPHINXOPTS="-W --keep-going"
+        run: |
+          uv venv --python 3.12
+          uv pip install -e '.[docs]'
+          uv run --no-sync make -C docs html SPHINXOPTS="-W --keep-going"
