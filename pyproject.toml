@@ -36,7 +36,8 @@ dependencies = [
     "numpy>=1.26.0,<3; python_version>='3.12' and python_version<'3.14'",
     "numpy>=2.3.3,<3; python_version>='3.14' and python_version<'3.15'",
     "numpy>=2.5.4,<3; python_version>='3.15'",
-    "pandas>=1.5.0,<3.2; python_version<'3.14'",
+    "pandas>=1.5.0,<3.2; python_version<'3.12'",
+    "pandas>=2.2.2,<3.2; python_version>='3.12' and python_version<'3.14'",
     "pandas>=2.3.3,<3.2; python_version>='3.14' and python_version<'3.15'",
     "pandas>=3.0.6,<3.2; python_version>='3.15'",
     "ipython >=3.2.3",
@@ -147,7 +148,7 @@ legacy_tox_ini = """
 
 envlist =
     py311-pandas{15,20,21,22}-numpy1
-    py312-pandas{21,22}-numpy1
+    py312-pandas222-numpy1
     py311-pandas222-numpy2{0,1,2}
     py312-pandas222-numpy2{0,1,2}
     py313-pandas222-numpy2{1,2}
@@ -179,6 +180,7 @@ setenv =
 changedir = tmp
 extras = test
 constrain_package_deps = True
+use_frozen_constraints = True
 deps =
     pandas15: pandas>=1.5.0,<1.6
     pandas20: pandas>=2.0,<2.1

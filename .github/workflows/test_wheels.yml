@@ -107,6 +107,7 @@ jobs:
                   assert not any(".ipynb_checkpoints" in name for name in sdist.getnames())
 
       - name: Upload qualification distributions
+        id: distributions
         uses: actions/upload-artifact@v7
         with:
           name: distributions-${{ matrix.os }}-${{ matrix.python-version }}
@@ -116,7 +117,8 @@ jobs:
       - name: Download qualification distributions
         uses: actions/download-artifact@v8
         with:
-          name: distributions-${{ matrix.os }}-${{ matrix.python-version }}
+          artifact-ids: ${{ steps.distributions.outputs.artifact-id }}
+          github-token: ${{ github.token }}
           path: roundtrip-dist
 
       - name: Verify artifact roundtrip identity
