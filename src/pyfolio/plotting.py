@@ -673,7 +673,10 @@ def show_perf_stats(
     else:
         if len(returns.index) > 0:
             date_rows["Total months"] = int(len(returns) / APPROX_BDAYS_PER_MONTH)
-        perf_stats = pd.DataFrame(perf_stats_all, columns=["Backtest"])
+        if isinstance(perf_stats_all, pd.Series):
+            perf_stats = pd.DataFrame(perf_stats_all, columns=["Backtest"])
+        else:
+            perf_stats = perf_stats_all.copy()
 
     # perf_stats is about to hold a mix of numeric and formatted-percent
     # strings in the same numeric-dtype column; cast to object up front
