@@ -21,4 +21,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y pandoc
       - name: Build documentation
-        run: uv run --python 3.12 --extra docs make -C docs html SPHINXOPTS="-W --keep-going"
+        run: |
+          uv venv --python 3.12
+          uv pip install -e '.[docs]'
+          uv run --no-sync make -C docs html SPHINXOPTS="-W --keep-going"

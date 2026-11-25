@@ -115,6 +115,23 @@ jobs:
           if-no-files-found: error
 
       - name: Download qualification distributions
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ steps.distributions.outputs.artifact-id }}
+          github-token: ${{ github.token }}
+          path: roundtrip-dist
+
+      - name: Wait for artifact availability before retrying
+        if: steps.download.outcome == 'failure'
+        shell: python
+        run: |
+          import time
+          time.sleep(20)
+
+      - name: Retry downloading the same qualification artifact
+        if: steps.download.outcome == 'failure'
         uses: actions/download-artifact@v8
         with:
           artifact-ids: ${{ steps.distributions.outputs.artifact-id }}
